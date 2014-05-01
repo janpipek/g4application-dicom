@@ -2,10 +2,11 @@
 
 #include "G4Application.hh"
 
-MAKE_G4_PLUGIN( DicomPlugin )
-
 using namespace g4;
 using namespace std;
+using namespace g4dicom;
+
+MAKE_G4_PLUGIN( g4dicom::DicomPlugin )
 
 DicomPlugin::DicomPlugin()
 {

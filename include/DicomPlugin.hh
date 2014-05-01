@@ -6,16 +6,19 @@
 #include "GeometryBuilder.hh"
 #include "PhysicsBuilder.hh"
 
-class DicomPlugin : public g4::Plugin
+namespace g4dicom
 {
-public:
-    DicomPlugin();
+    class DicomPlugin : public g4::Plugin
+    {
+    public:
+        DicomPlugin();
 
-    ~DicomPlugin();
-    
-    virtual const std::string GetName() const { return "DICOM Plugin"; }
-    
-    /* virtual g4::GeometryBuilder* GetGeometryBuilder() { return _geometryBuilder; } */
-};
+        ~DicomPlugin();
+
+        virtual const std::string GetName() const { return "DICOM Plugin"; }
+
+        /* virtual g4::GeometryBuilder* GetGeometryBuilder() { return _geometryBuilder; } */
+    };
+}
 
 #endif // DICOMPLUGIN_HH
