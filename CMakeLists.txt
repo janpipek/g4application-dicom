@@ -21,6 +21,7 @@ set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH})
 
 # Find the application library & Geant4
 find_package(G4Application REQUIRED)
+find_package(GDCM REQUIRED)
 find_package(Geant4 REQUIRED)
 find_package(Geant4 COMPONENTS qt)
 
@@ -32,7 +33,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 include_directories(${G4Application_INCLUDE_DIR} include)
 add_library(dicomPlugin SHARED ${sources} ${headers})
 
-target_link_libraries(dicomPlugin ${Geant4_LIBRARIES} ${G4Application_LIBRARY})
+target_link_libraries(dicomPlugin ${Geant4_LIBRARIES} ${G4Application_LIBRARY} ${GDCM_LIBRARY})
 
 install(TARGETS dicomPlugin DESTINATION .)
 
