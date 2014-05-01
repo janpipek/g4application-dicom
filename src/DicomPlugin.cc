@@ -1,6 +1,6 @@
 #include "DicomPlugin.hh"
 
-#include "G4Application.hh"
+#include "DicomData.hh"
 
 using namespace g4;
 using namespace std;
@@ -10,10 +10,21 @@ MAKE_G4_PLUGIN( g4dicom::DicomPlugin )
 
 DicomPlugin::DicomPlugin()
 {
-    // _geometryBuilder = new ExampleGeometryBuilder();
+    CreateUiDirectory("/dicom/");
+    _geometryBuilder = new DicomGeometryBuilder();
+    _reader = new DicomReader();
+    _messenger = new DicomMessenger(*_reader);
 }
 
 DicomPlugin::~DicomPlugin()
 {
-    // delete _geometryBuilder;
+    delete _reader;
+    delete _messenger;
+    delete _geometryBuilder;
+}
+
+void DicomPlugin::OnGeometryInitializing()
+{
+    const DicomData* data = _reader->GetData();
+    _geometryBuilder->SetDicomData(data);
 }

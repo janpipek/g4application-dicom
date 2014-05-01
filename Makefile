@@ -155,6 +155,78 @@ dicomPlugin/fast:
 	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/build
 .PHONY : dicomPlugin/fast
 
+src/DicomData.o: src/DicomData.cc.o
+.PHONY : src/DicomData.o
+
+# target to build an object file
+src/DicomData.cc.o:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomData.cc.o
+.PHONY : src/DicomData.cc.o
+
+src/DicomData.i: src/DicomData.cc.i
+.PHONY : src/DicomData.i
+
+# target to preprocess a source file
+src/DicomData.cc.i:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomData.cc.i
+.PHONY : src/DicomData.cc.i
+
+src/DicomData.s: src/DicomData.cc.s
+.PHONY : src/DicomData.s
+
+# target to generate assembly for a file
+src/DicomData.cc.s:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomData.cc.s
+.PHONY : src/DicomData.cc.s
+
+src/DicomGeometryBuilder.o: src/DicomGeometryBuilder.cc.o
+.PHONY : src/DicomGeometryBuilder.o
+
+# target to build an object file
+src/DicomGeometryBuilder.cc.o:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomGeometryBuilder.cc.o
+.PHONY : src/DicomGeometryBuilder.cc.o
+
+src/DicomGeometryBuilder.i: src/DicomGeometryBuilder.cc.i
+.PHONY : src/DicomGeometryBuilder.i
+
+# target to preprocess a source file
+src/DicomGeometryBuilder.cc.i:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomGeometryBuilder.cc.i
+.PHONY : src/DicomGeometryBuilder.cc.i
+
+src/DicomGeometryBuilder.s: src/DicomGeometryBuilder.cc.s
+.PHONY : src/DicomGeometryBuilder.s
+
+# target to generate assembly for a file
+src/DicomGeometryBuilder.cc.s:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomGeometryBuilder.cc.s
+.PHONY : src/DicomGeometryBuilder.cc.s
+
+src/DicomMessenger.o: src/DicomMessenger.cc.o
+.PHONY : src/DicomMessenger.o
+
+# target to build an object file
+src/DicomMessenger.cc.o:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomMessenger.cc.o
+.PHONY : src/DicomMessenger.cc.o
+
+src/DicomMessenger.i: src/DicomMessenger.cc.i
+.PHONY : src/DicomMessenger.i
+
+# target to preprocess a source file
+src/DicomMessenger.cc.i:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomMessenger.cc.i
+.PHONY : src/DicomMessenger.cc.i
+
+src/DicomMessenger.s: src/DicomMessenger.cc.s
+.PHONY : src/DicomMessenger.s
+
+# target to generate assembly for a file
+src/DicomMessenger.cc.s:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomMessenger.cc.s
+.PHONY : src/DicomMessenger.cc.s
+
 src/DicomPlugin.o: src/DicomPlugin.cc.o
 .PHONY : src/DicomPlugin.o
 
@@ -179,6 +251,30 @@ src/DicomPlugin.cc.s:
 	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomPlugin.cc.s
 .PHONY : src/DicomPlugin.cc.s
 
+src/DicomReader.o: src/DicomReader.cc.o
+.PHONY : src/DicomReader.o
+
+# target to build an object file
+src/DicomReader.cc.o:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomReader.cc.o
+.PHONY : src/DicomReader.cc.o
+
+src/DicomReader.i: src/DicomReader.cc.i
+.PHONY : src/DicomReader.i
+
+# target to preprocess a source file
+src/DicomReader.cc.i:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomReader.cc.i
+.PHONY : src/DicomReader.cc.i
+
+src/DicomReader.s: src/DicomReader.cc.s
+.PHONY : src/DicomReader.s
+
+# target to generate assembly for a file
+src/DicomReader.cc.s:
+	$(MAKE) -f CMakeFiles/dicomPlugin.dir/build.make CMakeFiles/dicomPlugin.dir/src/DicomReader.cc.s
+.PHONY : src/DicomReader.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,9 +288,21 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... src/DicomData.o"
+	@echo "... src/DicomData.i"
+	@echo "... src/DicomData.s"
+	@echo "... src/DicomGeometryBuilder.o"
+	@echo "... src/DicomGeometryBuilder.i"
+	@echo "... src/DicomGeometryBuilder.s"
+	@echo "... src/DicomMessenger.o"
+	@echo "... src/DicomMessenger.i"
+	@echo "... src/DicomMessenger.s"
 	@echo "... src/DicomPlugin.o"
 	@echo "... src/DicomPlugin.i"
 	@echo "... src/DicomPlugin.s"
+	@echo "... src/DicomReader.o"
+	@echo "... src/DicomReader.i"
+	@echo "... src/DicomReader.s"
 .PHONY : help
 
 
