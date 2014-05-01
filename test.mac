@@ -1,0 +1,23 @@
+# Basic DICOM example macro
+# -------------------------
+# Based on the simple plugin from g4application distribution
+
+# Load the plugin
+/app/plugin/load libsimplePlugin.so
+/app/plugin/load libdicomPlugin.so
+
+# Set a configuration value
+/app/setDouble generator.energy 0.5
+
+# Run
+/run/initialize
+
+# Add some of the integrated actions and set a parameter for them
+/app/addAction NumberingEventAction
+/app/addAction MemoryRunAction
+/app/setInt app.logEvents 10
+
+# Show configuration
+/app/printConfiguration
+
+/run/beamOn 100
