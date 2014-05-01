@@ -5,7 +5,7 @@ using namespace g4dicom;
 DicomMessenger::DicomMessenger(DicomReader &reader)
     : _reader(reader)
 {
-    _addFilesCommand = new G4UIcmdWithAString("/dicom/addFile", this);
+    _addFilesCommand = new G4UIcmdWithAString("/dicom/addFiles", this);
     _readFilesCommand = new G4UIcmdWithoutParameter("/dicom/readFiles", this);
 }
 

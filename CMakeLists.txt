@@ -37,6 +37,8 @@ target_link_libraries(dicomPlugin ${Geant4_LIBRARIES} ${G4Application_LIBRARY} $
 
 install(TARGETS dicomPlugin DESTINATION .)
 
+set(CMAKE_CXX_FLAGS "-std=c++0x")
+
 
 
  

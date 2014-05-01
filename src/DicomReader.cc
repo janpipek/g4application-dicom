@@ -1,6 +1,7 @@
 #include "DicomReader.hh"
 
-#include "globals.hh"
+#include <globals.hh>
+#include <gdcm/gdcmImageReader.h>
 
 #include "DicomData.hh"
 
@@ -38,8 +39,17 @@ void DicomReader::ReadFiles()
     }
     else
     {
+        _data = new DicomData();
         G4cout << "Reading DICOM files..." << G4endl;
-        // TODO: Implement
+        for (auto it = _paths.begin(); it != _paths.end(); it++)
+        {
+            gdcm::ImageReader reader;
+            reader.SetFileName((*it).c_str());
+            reader.Read();
+            gdcm::Image image = reader.GetImage();
+            // image.
+            // _data->AddImage(image);
+        }
     }
 }
 
