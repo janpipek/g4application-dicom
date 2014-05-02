@@ -12,4 +12,3 @@ vector<int> DicomSlice::GetDimensions() const
     dimensions.push_back(shape[2]);
     return dimensions;
 }
-

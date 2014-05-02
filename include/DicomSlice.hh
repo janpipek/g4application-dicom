@@ -14,6 +14,12 @@ namespace g4dicom
         data_type data;
 
         std::vector<int> GetDimensions() const;
+
+        std::vector<double> origin;
+
+        std::vector<double> spacing;
+
+        std::vector<double> directionCosines;
     };
 }
 
