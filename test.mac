@@ -6,14 +6,12 @@
 /app/plugin/load libsimplePlugin.so
 /app/plugin/load libdicomPlugin.so
 
-# Set a configuration value
-/app/setDouble generator.energy 0.5
+# DICOM images
+/dicom/addFiles /usr/local/share/Geant4-9.6.1/examples/extended/medical/DICOM/1.dcm
+/dicom/readFiles
 
 # Run
 /run/initialize
-
-/dicom/addFiles /usr/local/share/Geant4-9.6.1/examples/extended/medical/DICOM/1.dcm
-/dicom/readFiles
 
 # Show configuration
 /app/printConfiguration

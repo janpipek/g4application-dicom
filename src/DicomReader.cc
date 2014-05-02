@@ -27,7 +27,10 @@ void DicomReader::AddFiles(const std::string &path)
     G4cout << "Adding DICOM files: " << path << G4endl;
     if (_data)
     {
-        // TODO: throw exception
+        G4Exception("DicomReader",
+            "GeometryInitialized", FatalException,
+            "Cannot add DICOM file, geometry already initialized."
+        );
     }
     _paths.push_back(path);
 }
