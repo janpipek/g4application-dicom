@@ -51,7 +51,14 @@ void DicomReader::ReadFiles()
         {
             gdcm::ImageReader reader;
             reader.SetFileName((*it).c_str());
-            reader.Read();
+            if (!reader.Read())
+            {
+                G4Exception("DicomReader",
+                    "FileCannotBeRead", FatalException,
+                    "Cannot read DICOM file."
+                    // TODO: add path
+                );
+            }
             gdcm::Image image = reader.GetImage();
             DicomSlice* slice = GetSlice(&image);
             _data->Add(slice);
