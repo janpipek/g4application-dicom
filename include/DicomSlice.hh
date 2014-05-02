@@ -9,7 +9,7 @@ namespace g4dicom
     struct DicomSlice
     {
     public:
-        typedef boost::multi_array<double, 3> data_type;
+        typedef boost::multi_array<int16_t, 3> data_type;
 
         data_type data;
 

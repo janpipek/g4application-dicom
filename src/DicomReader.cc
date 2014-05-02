@@ -2,6 +2,8 @@
 
 #include <globals.hh>
 #include <gdcmImageReader.h>
+#include <gdcmPixelFormat.h>
+#include <gdcmRescaler.h>
 
 #include "DicomData.hh"
 #include "DicomSlice.hh"
@@ -70,9 +72,9 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
 {
     DicomSlice* slice = new DicomSlice();
 
+    // Get all dimensions
     unsigned int noDims = image->GetNumberOfDimensions();
     const unsigned int* dims = image->GetDimensions();
-
     int x = dims[0];
     int y = dims[1];
     int z = 1;
@@ -80,6 +82,29 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
     {
         z = dims[2];
     }
+
+    gdcm::PixelFormat originalFormat = image->GetPixelFormat();
+    gdcm::PixelFormat int16format = (gdcm::PixelFormat)(gdcm::PixelFormat::INT16);
+
+    // Prepare from where to read
+    int bufferLength = image->GetBufferLength();
+    char* inBuffer = new char[bufferLength];
+    image->GetBuffer(inBuffer);
+
+    // Prepare where to write
     slice->data.resize(boost::extents[x][y][z]);
+    char* outBuffer = (char*)slice->data.data();
+
+    // Prepare rescaler
+    gdcm::Rescaler rescaler;
+    rescaler.SetPixelFormat(originalFormat);
+    rescaler.SetSlope(image->GetSlope());
+    rescaler.SetIntercept(image->GetIntercept());
+    rescaler.SetUseTargetPixelType(true);
+    rescaler.SetTargetPixelType(int16format);
+    rescaler.SetMinMaxForPixelType(int16format.GetMin(), int16format.GetMax());
+
+    // Rescale
+    rescaler.Rescale(outBuffer, inBuffer, bufferLength);
     return slice;
 }
