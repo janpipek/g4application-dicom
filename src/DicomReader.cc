@@ -76,7 +76,7 @@ void DicomReader::ReadFiles()
     }
 }
 
-const DicomData* DicomReader::GetData()
+DicomData* DicomReader::GetData()
 {
     if (!_data)
     {
@@ -123,5 +123,16 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
 
     // Rescale
     rescaler.Rescale(outBuffer, inBuffer, bufferLength);
+
+    // Set other values
+    const double* cosines = image->GetDirectionCosines();
+    slice->directionCosines.assign(cosines, cosines + 6);
+
+    const double* origin = image->GetOrigin();
+    slice->origin.assign(origin, origin + 3);
+
+    const double* spacing = image->GetSpacing();
+    slice->spacing.assign(spacing, spacing + 3);
+
     return slice;
 }

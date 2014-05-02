@@ -25,7 +25,7 @@ namespace g4dicom
 
         void ReadFiles();
 
-        const DicomData* GetData();
+        DicomData* GetData();
 
         bool IsRead() const { return _data != 0; }
 
