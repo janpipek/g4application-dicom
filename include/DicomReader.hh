@@ -3,10 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <gdcmImage.h>
 
 namespace g4dicom
 {
     class DicomData;
+    class DicomSlice;
 
     /**
      * @short Class responsible for reading DICOM files
@@ -26,6 +28,9 @@ namespace g4dicom
         const DicomData* GetData();
 
         bool IsRead() const { return _data != 0; }
+
+    protected:
+        DicomSlice* GetSlice(gdcm::Image* image);
 
     private:
         std::vector<std::string> _paths;

@@ -2,7 +2,6 @@
 #define DICOMDATA_HH
 
 #include <vector>
-#include <gdcm/gdcmImage.h>
 
 namespace g4dicom
 {

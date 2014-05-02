@@ -1,9 +1,10 @@
 #include "DicomReader.hh"
 
 #include <globals.hh>
-#include <gdcm/gdcmImageReader.h>
+#include <gdcmImageReader.h>
 
 #include "DicomData.hh"
+#include "DicomSlice.hh"
 
 using namespace g4dicom;
 
@@ -47,8 +48,8 @@ void DicomReader::ReadFiles()
             reader.SetFileName((*it).c_str());
             reader.Read();
             gdcm::Image image = reader.GetImage();
-            // image.
-            // _data->AddImage(image);
+            DicomSlice* slice = GetSlice(&image);
+            _data->Add(slice);
         }
     }
 }
@@ -60,4 +61,22 @@ const DicomData* DicomReader::GetData()
         ReadFiles();
     }
     return _data;
+}
+
+DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
+{
+    DicomSlice* slice = new DicomSlice();
+
+    unsigned int noDims = image->GetNumberOfDimensions();
+    const unsigned int* dims = image->GetDimensions();
+
+    int x = dims[0];
+    int y = dims[1];
+    int z = 1;
+    if (noDims == 3)
+    {
+        z = dims[2];
+    }
+    slice->data.resize(boost::extents[x][y][z]);
+    return slice;
 }

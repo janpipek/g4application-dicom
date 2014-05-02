@@ -1,11 +1,16 @@
 #ifndef DICOMSLICE_HH
 #define DICOMSLICE_HH
 
+#include <boost/multi_array.hpp>
+
 namespace g4dicom
 {
-    class DicomSlice
+    struct DicomSlice
     {
+    public:
+        typedef boost::multi_array<double, 3> data_type;
 
+        data_type data;
     };
 }
 
