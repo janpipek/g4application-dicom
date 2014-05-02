@@ -2,6 +2,7 @@
 #define DICOMSLICE_HH
 
 #include <boost/multi_array.hpp>
+#include <vector>
 
 namespace g4dicom
 {
@@ -11,6 +12,8 @@ namespace g4dicom
         typedef boost::multi_array<double, 3> data_type;
 
         data_type data;
+
+        std::vector<int> GetDimensions() const;
     };
 }
 
