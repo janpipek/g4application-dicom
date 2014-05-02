@@ -47,15 +47,16 @@ else(GDCM_FOUND)
     message(FATAL_ERROR "Cannot find GDCM, did you set GDCM_DIR?")
 endif(GDCM_FOUND)
 
-set(GDCM_LIBRARIES  ${GDCM_LIBRARIES})
-
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 include_directories(${G4Application_INCLUDE_DIR} include)
 add_library(dicomPlugin SHARED ${sources} ${headers})
 
-target_link_libraries(dicomPlugin ${Geant4_LIBRARIES} ${G4Application_LIBRARY} ${GDCM_LIBRARIES})
+target_link_libraries(dicomPlugin
+    ${Geant4_LIBRARIES}
+    ${G4Application_LIBRARY}
+    ${GDCM_LIBRARIES})
 
 install(TARGETS dicomPlugin DESTINATION .)
 

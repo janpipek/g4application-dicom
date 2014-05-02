@@ -5,6 +5,14 @@ based on GDCM.
 
 The plugin is in a VERY EARLY stage of development.
 
+Requirements:
+-------------
+
+* g4application
+* Geant4
+* GDCM
+* boost
+
 Macro commands
 --------------    
 /dicom/loadFiles - specify DICOM files to load (using glob syntax).
