@@ -19,8 +19,18 @@ namespace g4dicom
 
         void Add(DicomSlice* slice);
 
+        bool IsValid();
+
+        std::vector<int> GetDimensions();
+
     private:
         std::vector<DicomSlice*> _slices;
+
+        std::vector<int> _dimensions;
+
+        int _validity;
+
+        void Validate();
     };
 }
 

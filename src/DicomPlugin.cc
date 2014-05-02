@@ -1,6 +1,7 @@
 #include "DicomPlugin.hh"
 
 #include "DicomData.hh"
+#include "dicomConfiguration.hh"
 
 using namespace g4;
 using namespace std;
@@ -25,6 +26,18 @@ DicomPlugin::~DicomPlugin()
 
 void DicomPlugin::OnGeometryInitializing()
 {
-    const DicomData* data = _reader->GetData();
+    DicomData* data = _reader->GetData();
+    if (!data->IsValid())
+    {
+        G4Exception("DicomPlugin",
+            "InvalidDicomData", FatalException,
+            "Cannot interpret DICOM slices as a single voxel array."
+        );
+    }
     _geometryBuilder->SetDicomData(data);
+}
+
+void DicomPlugin::SetConfigurationDefaults()
+{
+
 }

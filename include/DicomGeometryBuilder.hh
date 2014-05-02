@@ -16,13 +16,13 @@ namespace g4dicom
 
         virtual void BuildGeometry(G4LogicalVolume *);
 
-        void SetDicomData(const DicomData* data)
+        void SetDicomData(DicomData* data)
         {
             _data = data;
         }
 
     private:
-        const DicomData* _data;
+        DicomData* _data;
     };
 }
 
