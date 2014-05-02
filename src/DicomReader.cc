@@ -5,6 +5,8 @@
 #include <gdcmPixelFormat.h>
 #include <gdcmRescaler.h>
 
+#include <glob.h>
+
 #include "DicomData.hh"
 #include "DicomSlice.hh"
 
@@ -46,22 +48,30 @@ void DicomReader::ReadFiles()
     else
     {
         _data = new DicomData();
-        G4cout << "Reading DICOM files..." << G4endl;
+
         for (auto it = _paths.begin(); it != _paths.end(); it++)
         {
-            gdcm::ImageReader reader;
-            reader.SetFileName((*it).c_str());
-            if (!reader.Read())
+            glob_t res;
+            int success = glob((*it).c_str(), 0, 0, &res);
+            for (size_t i = 0; i < res.gl_pathc; i++)
             {
-                G4Exception("DicomReader",
-                    "FileCannotBeRead", FatalException,
-                    "Cannot read DICOM file."
-                    // TODO: add path
-                );
+                gdcm::ImageReader reader;
+                char* path = res.gl_pathv[i];
+                G4cout << "Reading DICOM file " << path << "..." << G4endl;
+                reader.SetFileName(path);
+                if (!reader.Read())
+                {
+                    G4Exception("DicomReader",
+                        "FileCannotBeRead", FatalException,
+                        "Cannot read DICOM file."
+                        // TODO: add path
+                    );
+                }
+                gdcm::Image image = reader.GetImage();
+                DicomSlice* slice = GetSlice(&image);
+                _data->Add(slice);
             }
-            gdcm::Image image = reader.GetImage();
-            DicomSlice* slice = GetSlice(&image);
-            _data->Add(slice);
+            globfree(&res);
         }
     }
 }
