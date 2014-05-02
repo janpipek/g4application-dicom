@@ -21,11 +21,33 @@ set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH})
 
 # Find the application library & Geant4
 find_package(G4Application REQUIRED)
-find_package(GDCM REQUIRED)
+
 find_package(Geant4 REQUIRED)
 find_package(Geant4 COMPONENTS qt)
 
 include(${Geant4_USE_FILE})
+
+# Set GDCM libraries
+# Answer from: http://stackoverflow.com/questions/21116319/using-gdcm-via-cmake
+find_package(GDCM REQUIRED)
+if(GDCM_FOUND)
+    include(${GDCM_USE_FILE})
+    set(GDCM_LIBRARIES 
+        gdcmCommon
+        gdcmDICT
+        gdcmDSED
+        gdcmIOD
+        gdcmjpeg12
+        gdcmjpeg16
+        gdcmjpeg8
+        gdcmMEXD
+        gdcmMSFF
+        socketxx)
+else(GDCM_FOUND)
+    message(FATAL_ERROR "Cannot find GDCM, did you set GDCM_DIR?")
+endif(GDCM_FOUND)
+
+set(GDCM_LIBRARIES  ${GDCM_LIBRARIES})
 
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
@@ -33,7 +55,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 include_directories(${G4Application_INCLUDE_DIR} include)
 add_library(dicomPlugin SHARED ${sources} ${headers})
 
-target_link_libraries(dicomPlugin ${Geant4_LIBRARIES} ${G4Application_LIBRARY} ${GDCM_LIBRARY})
+target_link_libraries(dicomPlugin ${Geant4_LIBRARIES} ${G4Application_LIBRARY} ${GDCM_LIBRARIES})
 
 install(TARGETS dicomPlugin DESTINATION .)
 
