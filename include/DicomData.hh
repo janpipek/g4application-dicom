@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "DicomSlice.hh"
+
 namespace g4dicom
 {
     class DicomSlice;
@@ -25,6 +27,13 @@ namespace g4dicom
          * @brief [x, y, z] dimensions of all data.
          */
         std::vector<int> GetDimensions();
+
+        /**
+         * @brief Get HU value of a voxel.
+         *
+         * Automatically sorts and validates data if necessary.
+         */
+        DicomSlice::basic_type GetValue(int x, int y, int z);
 
     private:
         std::vector<DicomSlice*> _slices;

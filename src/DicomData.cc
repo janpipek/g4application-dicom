@@ -62,6 +62,15 @@ std::vector<int> DicomData::GetDimensions()
     return _dimensions;
 }
 
+DicomSlice::basic_type DicomData::GetValue(int x, int y, int z)
+{
+    if (!_validity)
+    {
+        Validate();
+    }
+    return _slices[z]->data[x][y][1];
+}
+
 void DicomData::Validate()
 {
     _validity = -1; // Assumed invalid
