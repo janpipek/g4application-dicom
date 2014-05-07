@@ -6,6 +6,9 @@
 
 namespace g4dicom
 {
+    /**
+     * @short Data from one DICOM file.
+     */
     struct DicomSlice
     {
     public:

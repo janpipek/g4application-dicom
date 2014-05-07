@@ -16,4 +16,4 @@
 # Show configuration
 /app/printConfiguration
 
-/run/beamOn 100
+# /run/beamOn 100

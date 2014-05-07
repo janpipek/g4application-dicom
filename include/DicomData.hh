@@ -21,6 +21,9 @@ namespace g4dicom
 
         bool IsValid();
 
+        /**
+         * @brief [x, y, z] dimensions of all data.
+         */
         std::vector<int> GetDimensions();
 
     private:
@@ -30,7 +33,18 @@ namespace g4dicom
 
         int _validity;
 
+        bool _sorted;
+
+        /**
+         * @brief Go through all slices and ensure that
+         *    we can build voxel geometry out of these.
+         */
         void Validate();
+
+        /**
+         * @brief Sort slice according to their z-axis.
+         */
+        void SortSlices();
     };
 }
 
