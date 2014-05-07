@@ -1,6 +1,7 @@
 #include "DicomData.hh"
 
 #include <algorithm>
+#include <cmath>
 #include <globals.hh>
 
 #include "DicomSlice.hh"
@@ -73,6 +74,8 @@ void DicomData::Validate()
     std::vector<int> dims0 = _slices[0]->GetDimensions();
 
     DicomSlice* previous = 0;
+    double difference = 0.0;
+
     for (auto it = _slices.begin(); it != _slices.end(); it++)
     {
         DicomSlice* slice = *it;
@@ -84,7 +87,15 @@ void DicomData::Validate()
         if (slice->GetDimensions()[2] > 1);
         if (previous)
         {
-            // TODO: Check z value
+            // All differences are same
+            if (difference)
+            {
+                double lastDiff = slice->origin[2] - previous->origin[2];
+                if (fabs(lastDiff - difference) > 0.001)
+                {
+                    return;
+                }
+            }
         }
         previous = slice;
     }
