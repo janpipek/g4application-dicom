@@ -10,7 +10,7 @@ The plugin is in a VERY EARLY stage of development.
 Requirements:
 -------------
 
-* g4application
+* g4application (possibility to build without it is planned)
 * Geant4
 * GDCM
 * boost
