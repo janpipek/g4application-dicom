@@ -3,6 +3,9 @@
 #include "DicomData.hh"
 
 using namespace g4dicom;
+using namespace std;
+
+// See http://nipy.org/nibabel/dicom/dicom_orientation.html
 
 void g4dicom::DicomGeometryBuilder::BuildGeometry(G4LogicalVolume *)
 {
@@ -18,7 +21,7 @@ void g4dicom::DicomGeometryBuilder::BuildGeometry(G4LogicalVolume *)
 
 
 DicomGeometryBuilder::DicomGeometryBuilder()
-    : _data(0)
+    : _data(0), _materialDatabase(0)
 {
 
 }

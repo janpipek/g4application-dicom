@@ -34,7 +34,9 @@ void DicomPlugin::OnGeometryInitializing()
             "Cannot interpret DICOM slices as a single voxel array."
         );
     }
+    DicomMaterialDatabase* db = new DicomMaterialDatabase();
     _geometryBuilder->SetDicomData(data);
+    _geometryBuilder->SetMaterialDatabase(db);
 }
 
 void DicomPlugin::SetConfigurationDefaults()

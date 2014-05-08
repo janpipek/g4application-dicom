@@ -2,6 +2,7 @@
 #define DICOMGEOMETRYBUILDER_HH
 
 #include "GeometryBuilder.hh"
+#include "DicomMaterialDatabase.hh"
 
 namespace g4dicom
 {
@@ -21,8 +22,15 @@ namespace g4dicom
             _data = data;
         }
 
+        void SetMaterialDatabase(VDicomMaterialDatabase* db)
+        {
+            _materialDatabase = db;
+        }
+
     private:
         DicomData* _data;
+
+        VDicomMaterialDatabase* _materialDatabase;
     };
 }
 
