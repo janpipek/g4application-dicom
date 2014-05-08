@@ -6,11 +6,15 @@
 #include <G4NistManager.hh>
 #include <G4PVPlacement.hh>
 
+#include "Configuration.hh"
+
 #include "DicomMaterialDatabase.hh"
 #include "DicomData.hh"
+#include "dicomConfiguration.hh"
 
 using namespace g4dicom;
 using namespace std;
+using namespace g4;
 
 // See http://nipy.org/nibabel/dicom/dicom_orientation.html
 
@@ -30,9 +34,15 @@ void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
         << " x " << totalSize[1] << " x " << totalSize[2] << " mm."
         << G4endl;
 
+    // Get phantom position from configuration
+    double centerX = Configuration::GetValue<double>(PHANTOM_CENTER_X);
+    double centerY = Configuration::GetValue<double>(PHANTOM_CENTER_Y);
+    double centerZ = Configuration::GetValue<double>(PHANTOM_CENTER_Z);
+    G4ThreeVector center(centerX, centerY, centerZ);
+
     G4LogicalVolume* logContainer = BuildLogicalVolume();
     new G4PVPlacement(0,                // Rotation
-        G4ThreeVector(0.0, 0.0, 100.0), // Position
+        center,                         // Position
         logContainer,                   // The logic volume
         "phantomContainer",             // Name
         logWorld,                       // Mother
