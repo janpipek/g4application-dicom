@@ -2,9 +2,11 @@
 
 #include <G4Material.hh>
 #include <G4NistManager.hh>
+#include <boost/lexical_cast.hpp>
 
 using namespace g4dicom;
 using namespace std;
+using namespace boost;
 
 G4Material *VDicomMaterialDatabase::GetDefaultMaterial()
 {
@@ -21,7 +23,10 @@ G4Material* DicomMaterialDatabase::GetMaterialByHU(int hu)
     {
         G4NistManager* nistManager = G4NistManager::Instance();
         double density = primitiveHUtoDensity(hu);
-        _materials[hu] = nistManager->BuildMaterialWithNewDensity("G4_WATER", density);
+
+        string newName = "VOXEL_WATER";
+        newName += lexical_cast<string>(hu);
+        _materials[hu] = nistManager->BuildMaterialWithNewDensity(newName, "G4_WATER", density);
     }
     return _materials[hu];
 }
@@ -46,7 +51,11 @@ vector<G4Material*> DicomMaterialDatabase::GetAllMaterials()
     return materials;
 }
 
-double primitiveHUtoDensity(double hu)
+namespace g4dicom
 {
-    return 1.0 * g / cm3 * (hu + 1000.0) / 1000.0;
+    double primitiveHUtoDensity(double hu)
+    {
+        return 1.0 * g / cm3 * (hu + 1000.0) / 1000.0;
+    }
 }
+
