@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
+
 #include <globals.hh>
 
 using namespace g4dicom;
@@ -67,6 +69,39 @@ DicomSlice::basic_type DicomData::GetValue(int x, int y, int z)
         Validate();
     }
     return _slices[z]->data[x][y][1];
+}
+
+vector<double> DicomData::GetVoxelSize()
+{
+    double x = _slices[0]->spacing[0] * mm;
+    double y = _slices[0]->spacing[1] * mm;
+    double z;
+    if (_slices.size() > 1)
+    {
+        z = (_slices[1]->origin[2] - _slices[0]->origin[2]) * mm;
+    }
+    else
+    {
+        throw length_error("Cannot get the 3rd voxel dimension for 2D data.");
+    }
+    vector<double> size;
+    size.push_back(x);
+    size.push_back(y);
+    size.push_back(z);
+    return size;
+}
+
+vector<double> DicomData::GetTotalSize()
+{
+    vector<double> voxelSize = GetVoxelSize();
+    vector<int> dims = GetDimensions();
+
+    vector<double> totalSize;
+    for (int i = 0; i < 3; i++)
+    {
+        totalSize.push_back(voxelSize[i] * dims[i]);
+    }
+    return totalSize;
 }
 
 void DicomData::Validate()

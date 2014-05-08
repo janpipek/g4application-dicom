@@ -33,6 +33,20 @@ namespace g4dicom
          */
         DicomSlice::basic_type GetValue(int x, int y, int z);
 
+        /**
+         * @short Physical dimensions of one voxel.
+         *
+         * In Geant4 standard units (by coincidence mm's).
+         */
+        std::vector<double> GetVoxelSize();
+
+        /**
+         * @short Physical dimension of the whole volume.
+         *
+         * In Geant4 standard units (by coincidence mm's).
+         */
+        std::vector<double> GetTotalSize();
+
     private:
         std::vector<DicomSlice*> _slices;
 
