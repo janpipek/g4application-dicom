@@ -4,14 +4,14 @@
 // G4Application includes
 #include "Plugin.hh"
 #include "GeometryBuilder.hh"
-#include "PhysicsBuilder.hh"
 
 #include "DicomGeometryBuilder.hh"
-#include "DicomMessenger.hh"
-#include "DicomReader.hh"
 
 namespace g4dicom
 {
+    class DicomMessenger;
+    class DicomReader;
+
     class DicomPlugin : public g4::Plugin
     {
     public:

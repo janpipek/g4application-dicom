@@ -4,10 +4,11 @@
 #include <G4UImessenger.hh>
 #include <G4UIcmdWithAString.hh>
 #include <G4UIcmdWithoutParameter.hh>
-#include <DicomReader.hh>
 
 namespace g4dicom
 {
+    class DicomReader;
+
     class DicomMessenger : public G4UImessenger
     {
     public:

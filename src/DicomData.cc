@@ -4,8 +4,6 @@
 #include <cmath>
 #include <globals.hh>
 
-#include "DicomSlice.hh"
-
 using namespace g4dicom;
 using namespace std;
 

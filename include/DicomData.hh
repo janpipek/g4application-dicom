@@ -7,8 +7,6 @@
 
 namespace g4dicom
 {
-    class DicomSlice;
-
     /**
      * @short Data object that represents a set of DICOM images.
      */

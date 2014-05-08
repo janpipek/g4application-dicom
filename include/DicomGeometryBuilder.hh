@@ -2,11 +2,13 @@
 #define DICOMGEOMETRYBUILDER_HH
 
 #include "GeometryBuilder.hh"
-#include "DicomMaterialDatabase.hh"
+
+class G4LogicalVolume;
 
 namespace g4dicom
 {
     class DicomData;
+    class VDicomMaterialDatabase;
 
     class DicomGeometryBuilder : public g4::GeometryBuilder
     {

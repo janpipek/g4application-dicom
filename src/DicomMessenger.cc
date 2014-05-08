@@ -1,4 +1,5 @@
 #include "DicomMessenger.hh"
+#include "DicomReader.hh"
 
 using namespace g4dicom;
 

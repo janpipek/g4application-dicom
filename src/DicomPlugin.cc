@@ -1,7 +1,10 @@
 #include "DicomPlugin.hh"
 
 #include "DicomData.hh"
+#include "DicomMaterialDatabase.hh"
 #include "dicomConfiguration.hh"
+#include "DicomMessenger.hh"
+#include "DicomReader.hh"
 
 using namespace g4;
 using namespace std;
