@@ -62,6 +62,25 @@ std::vector<int> DicomData::GetDimensions()
     return _dimensions;
 }
 
+std::vector<double> DicomData::GetCenter()
+{
+    if (!IsValid())
+    {
+        // Error
+    }
+    vector<int> dims = GetDimensions();
+    vector<double> voxelSize = GetVoxelSize();
+    vector<double> origin = _slices[0]->origin;
+
+    vector<double> center;
+    for (int i = 0; i < 3; i++)
+    {
+        double posI = origin[i] + (dims[i] - 1) * voxelSize[i] / 2.;
+        center.push_back(posI);
+    }
+    return center;
+}
+
 DicomSlice::basic_type DicomData::GetValue(int x, int y, int z)
 {
     if (!_validity)

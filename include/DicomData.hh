@@ -27,6 +27,14 @@ namespace g4dicom
         std::vector<int> GetDimensions();
 
         /**
+         * @brief Get the center of DICOM volume.
+         *
+         * Calculated from "origin" values stored in the DICOM files.
+         * In Geant4 standard units.
+         */
+        std::vector<double> GetCenter();
+
+        /**
          * @brief Get HU value of a voxel.
          *
          * Automatically sorts and validates data if necessary.
