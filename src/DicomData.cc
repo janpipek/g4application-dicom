@@ -68,7 +68,7 @@ DicomSlice::basic_type DicomData::GetValue(int x, int y, int z)
     {
         Validate();
     }
-    return _slices[z]->data[x][y][1];
+    return _slices[z]->data[x][y][0];
 }
 
 vector<double> DicomData::GetVoxelSize()
