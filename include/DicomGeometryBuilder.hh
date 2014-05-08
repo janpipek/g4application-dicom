@@ -29,6 +29,8 @@ namespace g4dicom
             _materialDatabase = db;
         }
 
+        G4LogicalVolume* BuildLogicalVolume();
+
     private:
         DicomData* _data;
 
