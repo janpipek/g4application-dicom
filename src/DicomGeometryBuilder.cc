@@ -5,12 +5,16 @@
 #include <G4Material.hh>
 #include <G4NistManager.hh>
 #include <G4PVPlacement.hh>
+#include <G4PVReplica.hh>
+#include <G4PVParameterised.hh>
+#include <globals.hh>
 
 #include "Configuration.hh"
 
 #include "DicomMaterialDatabase.hh"
 #include "DicomData.hh"
 #include "dicomConfiguration.hh"
+#include "VoxelParameterisation.hh"
 
 using namespace g4dicom;
 using namespace std;
@@ -62,7 +66,7 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
     // The container
     G4String containerName("voxelContainer");
     G4VSolid* solContainer =
-        new G4Box(containerName, voxelSize[0], voxelSize[1], voxelSize[2]);
+        new G4Box(containerName, totalSize[0]/2, totalSize[1]/2, totalSize[2]/2);
     G4LogicalVolume* logContainer =
         new G4LogicalVolume(solContainer, air, containerName);
 
@@ -72,19 +76,32 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
 
     // Solids
     G4VSolid* solXReplica =
-        new G4Box(xReplicaName, voxelSize[0], voxelSize[1], voxelSize[2]);
+        new G4Box(xReplicaName, voxelSize[0]/2, totalSize[1]/2, totalSize[2]/2);
     G4VSolid* solYReplica =
-        new G4Box(yReplicaName, totalSize[0], voxelSize[1], voxelSize[2]);
-    G4VSolid* solZReplica =
-        new G4Box(zReplicaName, totalSize[0], totalSize[1], voxelSize[2]);
+        new G4Box(yReplicaName, voxelSize[0]/2, voxelSize[1]/2, totalSize[2]/2);
+    G4VSolid* solZVoxel =
+        new G4Box(zReplicaName, voxelSize[0]/2, voxelSize[1]/2, voxelSize[2]/2);
 
     // Logical volumes
     G4LogicalVolume* logXReplica =
         new G4LogicalVolume(solXReplica, air, xReplicaName);
     G4LogicalVolume* logYReplica =
         new G4LogicalVolume(solYReplica, air, yReplicaName);
-    G4LogicalVolume* logZReplica =
-        new G4LogicalVolume(solZReplica, air, zReplicaName);
+    G4LogicalVolume* logZVoxel =
+        new G4LogicalVolume(solZVoxel, air, zReplicaName);
+
+    // Place physical volumes for x&y
+    new G4PVReplica(xReplicaName, logXReplica, logContainer, kXAxis, dims[0], voxelSize[0]);
+    new G4PVReplica(yReplicaName, logYReplica, logXReplica, kYAxis, dims[1], voxelSize[1]);
+
+    // Place physical volume with parameterisation for z
+    VoxelParameterisation* voxelParam = new VoxelParameterisation(_materialDatabase, _data);
+    new G4PVParameterised(zReplicaName,
+                          logZVoxel,
+                          logYReplica,
+                          kZAxis,
+                          dims[2],
+                          voxelParam);
 
     // Physical volumes
     return logContainer;
