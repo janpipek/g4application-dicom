@@ -18,6 +18,7 @@ DicomPlugin::DicomPlugin()
     _geometryBuilder = new DicomGeometryBuilder();
     _reader = new DicomReader();
     _messenger = new DicomMessenger(*_reader);
+    SetConfigurationDefaults();
 }
 
 DicomPlugin::~DicomPlugin()
@@ -40,9 +41,4 @@ void DicomPlugin::OnGeometryInitializing()
     DicomMaterialDatabase* db = new DicomMaterialDatabase();
     _geometryBuilder->SetDicomData(data);
     _geometryBuilder->SetMaterialDatabase(db);
-}
-
-void DicomPlugin::SetConfigurationDefaults()
-{
-
 }

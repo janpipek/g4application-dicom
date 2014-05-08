@@ -31,8 +31,6 @@ namespace g4dicom
         DicomMessenger* _messenger;
 
         DicomReader* _reader;
-
-        void SetConfigurationDefaults();
     };
 }
 
