@@ -13,6 +13,7 @@ using namespace g4dicom;
 MAKE_G4_PLUGIN( g4dicom::DicomPlugin )
 
 DicomPlugin::DicomPlugin()
+    : _cropLimits(0)
 {
     CreateUiDirectory("/dicom/");
     _geometryBuilder = new DicomGeometryBuilder();
@@ -26,11 +27,19 @@ DicomPlugin::~DicomPlugin()
     delete _reader;
     delete _messenger;
     delete _geometryBuilder;
+    if (_cropLimits)
+    {
+        delete _cropLimits;
+    }
 }
 
 void DicomPlugin::OnGeometryInitializing()
 {
     DicomData* data = _reader->GetData();
+    if (_cropLimits)
+    {
+        data->Crop(*_cropLimits);
+    }
     if (!data->IsValid())
     {
         G4Exception("DicomPlugin",
@@ -41,4 +50,10 @@ void DicomPlugin::OnGeometryInitializing()
     DicomMaterialDatabase* db = new DicomMaterialDatabase();
     _geometryBuilder->SetDicomData(data);
     _geometryBuilder->SetMaterialDatabase(db);
+}
+
+void DicomPlugin::SetCropLimits(const vector<int>& cropLimits)
+{
+    _cropLimits = new vector<int>();
+    *_cropLimits = cropLimits;
 }

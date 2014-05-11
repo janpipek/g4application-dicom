@@ -48,13 +48,41 @@ std::vector<int> DicomData::GetDimensions()
 {
     if (_dimensions.size() == 0)
     {
-        int dimX = _slices[0]->GetDimensions()[0];
-        int dimY = _slices[0]->GetDimensions()[1];
-        int dimZ = _slices[0]->GetDimensions()[2];
-        for (int i = 1; i < _slices.size(); i++)
+        int dimX, dimY, dimZ;
+        if (_xmax)
         {
-            dimZ += _slices[i]->GetDimensions()[2];
+            dimX = _xmax;
         }
+        else
+        {
+            dimX = _slices[0]->GetDimensions()[0];
+        }
+        dimX -= _xmin;
+
+        if (_ymax)
+        {
+            dimY = _ymax;
+        }
+        else
+        {
+            dimY = _slices[0]->GetDimensions()[1];
+        }
+        dimY -= _ymin;
+
+        if (_zmax)
+        {
+            dimZ = _zmax;
+        }
+        else
+        {
+            dimZ = _slices[0]->GetDimensions()[2];
+            for (int i = 1; i < _slices.size(); i++)
+            {
+                dimZ += _slices[i]->GetDimensions()[2];
+            }
+        }
+        dimZ -= _zmin;
+
         _dimensions.push_back(dimX);
         _dimensions.push_back(dimY);
         _dimensions.push_back(dimZ);
@@ -66,16 +94,18 @@ std::vector<double> DicomData::GetCenter()
 {
     if (!IsValid())
     {
-        // Error
+        throw runtime_error("Dicom data are not valid.");
     }
     vector<int> dims = GetDimensions();
     vector<double> voxelSize = GetVoxelSize();
     vector<double> origin = _slices[0]->origin;
 
+    int shift[] { _xmin, _ymin, _zmin };
+
     vector<double> center;
     for (int i = 0; i < 3; i++)
     {
-        double posI = origin[i] + (dims[i] - 1) * voxelSize[i] / 2.;
+        double posI = origin[i] + (2 * shift[i] + dims[i] - 1) * voxelSize[i] / 2.;
         center.push_back(posI);
     }
     return center;
@@ -87,7 +117,7 @@ DicomSlice::basic_type DicomData::GetValue(int x, int y, int z)
     {
         Validate();
     }
-    return _slices[z]->data[x][y][0];
+    return _slices[z+_zmin]->data[x+_xmin][y+_ymin][0];
 }
 
 vector<double> DicomData::GetVoxelSize()
@@ -123,6 +153,18 @@ vector<double> DicomData::GetTotalSize()
     return totalSize;
 }
 
+void DicomData::Crop(std::vector<int> limits)
+{
+    _validity = 0;
+    _dimensions.clear();
+    _xmin = limits[0];
+    _xmax = limits[1];
+    _ymin = limits[2];
+    _ymax = limits[3];
+    _zmin = limits[4];
+    _zmax = limits[5];
+}
+
 void DicomData::Validate()
 {
     _validity = -1; // Assumed invalid
@@ -137,6 +179,19 @@ void DicomData::Validate()
     DicomSlice* previous = 0;
     double difference = 0.0;
 
+    // Check crop limits
+    if (_xmin > _xmax) return;
+    if (_ymin > _ymax) return;
+    if (_zmin > _zmax) return;
+    if (_xmin && _xmin == _xmax) return;
+    if (_ymin && _ymin == _ymax) return;
+    if (_zmin && _zmin == _zmax) return;
+    if (_xmin < 0 || _ymin < 0 || _zmin < 0) return;
+    if (_xmax > dims0[0]) return;
+    if (_ymax > dims0[1]) return;
+    if (_zmax > _slices.size()) return;
+
+    // Check the slice are the same
     for (auto it = _slices.begin(); it != _slices.end(); it++)
     {
         DicomSlice* slice = *it;
@@ -145,7 +200,7 @@ void DicomData::Validate()
         if (slice->GetDimensions() != dims0) return;
 
         // Cannot interpret more slices in one file
-        if (slice->GetDimensions()[2] > 1);
+        if (slice->GetDimensions()[2] > 1) return;
         if (previous)
         {
             // All differences are same

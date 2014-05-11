@@ -11,7 +11,7 @@ DicomMessenger::DicomMessenger(DicomPlugin &plugin)
 {
     _addFilesCommand = new G4UIcmdWithAString("/dicom/addFiles", this);
     _readFilesCommand = new G4UIcmdWithoutParameter("/dicom/readFiles", this);
-    _cropCommand = new UIcmdWithNIntegers("/dicom/crop", this);
+    _cropCommand = new UIcmdWithNIntegers("/dicom/crop", 6, this);
 }
 
 DicomMessenger::~DicomMessenger()
@@ -37,7 +37,7 @@ void DicomMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
     }
     else if (command == _cropCommand)
     {
-        vector<int> cropFactors = _cropCommand->GetNewIntVectorValue(newValue);
-        // TODO: use it
+        vector<int> cropLimits = _cropCommand->GetNewIntVectorValue(newValue);
+        _plugin.SetCropLimits(cropLimits);
     }
 }

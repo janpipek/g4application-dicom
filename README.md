@@ -18,6 +18,7 @@ Macro commands
 --------------    
 * /dicom/loadFiles - specify DICOM files to load (using glob syntax). Can be used multiple times.
 * /dicom/readFiles - force reading of files. Not necessary because geometry building does this implicitely.
+* /dicom/crop - select only a rectangular subset of voxels. Provide 6 values (xmin, xmax, ymin, ymax, zmin, zmax) as voxel indices, 0 meaning no limit. Zero-based indexing, upper limit is not inclusive.
 
 Configuration values
 --------------------

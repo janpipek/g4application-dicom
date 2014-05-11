@@ -55,6 +55,16 @@ namespace g4dicom
          */
         std::vector<double> GetTotalSize();
 
+        /**
+         * @short Limit the number of voxels in each direction.
+         *
+         * @param limits 6-element vector xmin, xmax, ymin, ymax, zmin, zmax
+         *      (exclusive)
+         *
+         * All 6 value have to be supplied. Zeroes mean no limit though.
+         */
+        void Crop(std::vector<int> limits);
+
     private:
         std::vector<DicomSlice*> _slices;
 
@@ -74,6 +84,14 @@ namespace g4dicom
          * @brief Sort slice according to their z-axis.
          */
         void SortSlices();
+
+        // Limits
+        int _xmin = 0;
+        int _xmax = 0;
+        int _ymin = 0;
+        int _ymax = 0;
+        int _zmin = 0;
+        int _zmax = 0;
     };
 }
 

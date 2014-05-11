@@ -27,7 +27,11 @@ namespace g4dicom
 
         virtual void OnGeometryInitializing();
 
+        virtual void SetCropLimits(const std::vector<int>& cropLimits);
+
     private:
+        std::vector<int>* _cropLimits;
+
         DicomGeometryBuilder* _geometryBuilder;
 
         DicomMessenger* _messenger;
