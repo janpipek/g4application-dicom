@@ -5,6 +5,8 @@
 #include <G4UIcmdWithAString.hh>
 #include <G4UIcmdWithoutParameter.hh>
 
+#include "ui/UIcmdWithNIntegers.hh"
+
 namespace g4dicom
 {
     class DicomReader;
@@ -26,6 +28,8 @@ namespace g4dicom
         G4UIcmdWithAString* _addFilesCommand;
 
         G4UIcmdWithoutParameter* _readFilesCommand;
+
+        g4::UIcmdWithNIntegers* _cropCommand;
 
         DicomReader& _reader;
     };
