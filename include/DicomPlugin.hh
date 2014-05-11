@@ -23,6 +23,8 @@ namespace g4dicom
 
         virtual g4::GeometryBuilder* GetGeometryBuilder() { return _geometryBuilder; }
 
+        virtual DicomReader* GetDicomReader() const { return _reader; }
+
         virtual void OnGeometryInitializing();
 
     private:

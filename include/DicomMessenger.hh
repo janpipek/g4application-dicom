@@ -9,12 +9,12 @@
 
 namespace g4dicom
 {
-    class DicomReader;
+    class DicomPlugin;
 
     class DicomMessenger : public G4UImessenger
     {
     public:
-        DicomMessenger(DicomReader& reader);
+        DicomMessenger(DicomPlugin& plugin);
 
         virtual ~DicomMessenger();
 
@@ -31,7 +31,7 @@ namespace g4dicom
 
         g4::UIcmdWithNIntegers* _cropCommand;
 
-        DicomReader& _reader;
+        DicomPlugin& _plugin;
     };
 }
 

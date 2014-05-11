@@ -17,7 +17,7 @@ DicomPlugin::DicomPlugin()
     CreateUiDirectory("/dicom/");
     _geometryBuilder = new DicomGeometryBuilder();
     _reader = new DicomReader();
-    _messenger = new DicomMessenger(*_reader);
+    _messenger = new DicomMessenger(*this);
     SetConfigurationDefaults();
 }
 
