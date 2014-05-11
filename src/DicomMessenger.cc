@@ -1,10 +1,11 @@
 #include "DicomMessenger.hh"
+#include "DicomPlugin.hh"
 #include "DicomReader.hh"
 
 using namespace g4dicom;
 
-DicomMessenger::DicomMessenger(DicomReader &reader)
-    : _reader(reader)
+DicomMessenger::DicomMessenger(DicomPlugin &plugin)
+    : _plugin(plugin)
 {
     _addFilesCommand = new G4UIcmdWithAString("/dicom/addFiles", this);
     _readFilesCommand = new G4UIcmdWithoutParameter("/dicom/readFiles", this);
@@ -24,10 +25,10 @@ void DicomMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
 {
     if (command == _addFilesCommand)
     {
-        _reader.AddFiles(newValue);
+        _plugin.GetDicomReader()->AddFiles(newValue);
     }
     else if (command == _readFilesCommand)
     {
-        _reader.ReadFiles();
+        _plugin.GetDicomReader()->ReadFiles();
     }
 }

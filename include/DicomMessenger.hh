@@ -7,12 +7,12 @@
 
 namespace g4dicom
 {
-    class DicomReader;
+    class DicomPlugin;
 
     class DicomMessenger : public G4UImessenger
     {
     public:
-        DicomMessenger(DicomReader& reader);
+        DicomMessenger(DicomPlugin& plugin);
 
         virtual ~DicomMessenger();
 
@@ -27,7 +27,7 @@ namespace g4dicom
 
         G4UIcmdWithoutParameter* _readFilesCommand;
 
-        DicomReader& _reader;
+        DicomPlugin& _plugin;
     };
 }
 
