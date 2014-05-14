@@ -7,7 +7,7 @@
 
 namespace g4dicom
 {
-    class VDicomMaterialDatabase;
+    class VMaterialDatabase;
     class DicomData;
 
     class VoxelParameterisation : public G4VNestedParameterisation
@@ -24,12 +24,12 @@ namespace g4dicom
         virtual G4Material* GetMaterial(G4int idx) const;
 
     public:
-        VoxelParameterisation(VDicomMaterialDatabase* materialDatabase, DicomData* dicomData);
+        VoxelParameterisation(VMaterialDatabase* materialDatabase, DicomData* dicomData);
 
     private:
         DicomData* _dicomData;
 
-        VDicomMaterialDatabase* _materialDatabase;
+        VMaterialDatabase* _materialDatabase;
 
         boost::multi_array<G4Material*, 3> _voxelMaterials;
 

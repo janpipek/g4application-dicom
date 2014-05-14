@@ -8,7 +8,7 @@ class G4LogicalVolume;
 namespace g4dicom
 {
     class DicomData;
-    class VDicomMaterialDatabase;
+    class VMaterialDatabase;
 
     class DicomGeometryBuilder : public g4::GeometryBuilder
     {
@@ -24,7 +24,7 @@ namespace g4dicom
             _data = data;
         }
 
-        void SetMaterialDatabase(VDicomMaterialDatabase* db)
+        void SetMaterialDatabase(VMaterialDatabase* db)
         {
             _materialDatabase = db;
         }
@@ -34,7 +34,7 @@ namespace g4dicom
     private:
         DicomData* _data;
 
-        VDicomMaterialDatabase* _materialDatabase;
+        VMaterialDatabase* _materialDatabase;
     };
 }
 

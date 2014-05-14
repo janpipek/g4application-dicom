@@ -3,7 +3,7 @@
 #include <G4VTouchable.hh>
 #include <G4VPhysicalVolume.hh>
 
-#include "DicomMaterialDatabase.hh"
+#include "VMaterialDatabase.hh"
 #include "DicomData.hh"
 
 using namespace g4dicom;
@@ -40,7 +40,7 @@ G4Material* VoxelParameterisation::GetMaterial(G4int idx) const
     return _materials[idx];
 }
 
-VoxelParameterisation::VoxelParameterisation(VDicomMaterialDatabase* materialDatabase, DicomData* dicomData)
+VoxelParameterisation::VoxelParameterisation(VMaterialDatabase* materialDatabase, DicomData* dicomData)
     : _materialDatabase(materialDatabase),
       _dicomData(dicomData)
 {

@@ -1,4 +1,4 @@
-#include "DicomMaterialDatabase.hh"
+#include "MaterialDatabase.hh"
 
 #include <G4Material.hh>
 #include <G4NistManager.hh>
@@ -8,12 +8,12 @@ using namespace g4dicom;
 using namespace std;
 using namespace boost;
 
-G4Material *VDicomMaterialDatabase::GetDefaultMaterial()
+G4Material *VMaterialDatabase::GetDefaultMaterial()
 {
     return G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 }
 
-G4Material* DicomMaterialDatabase::GetMaterialByHU(int hu)
+G4Material* MaterialDatabase::GetMaterialByHU(int hu)
 {
     if (hu < minHU)
     {
@@ -31,17 +31,17 @@ G4Material* DicomMaterialDatabase::GetMaterialByHU(int hu)
     return _materials[hu];
 }
 
-DicomMaterialDatabase::DicomMaterialDatabase()
+MaterialDatabase::MaterialDatabase()
 {
     _materials[minHU] = GetDefaultMaterial();
 }
 
-G4Material* DicomMaterialDatabase::GetMaterial(DicomData* data, int x, int y, int z)
+G4Material* MaterialDatabase::GetMaterial(DicomData* data, int x, int y, int z)
 {
     return GetMaterialByHU(data->GetValue(x, y, z));
 }
 
-vector<G4Material*> DicomMaterialDatabase::GetAllMaterials()
+vector<G4Material*> MaterialDatabase::GetAllMaterials()
 {
     vector<G4Material*> materials;
     for (auto it = _materials.begin(); it != _materials.end(); it++)

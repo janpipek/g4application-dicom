@@ -1,7 +1,7 @@
 #include "DicomPlugin.hh"
 
 #include "DicomData.hh"
-#include "DicomMaterialDatabase.hh"
+#include "MaterialDatabase.hh"
 #include "dicomConfiguration.hh"
 #include "DicomMessenger.hh"
 #include "DicomReader.hh"
@@ -47,7 +47,7 @@ void DicomPlugin::OnGeometryInitializing()
             "Cannot interpret DICOM slices as a single voxel array."
         );
     }
-    DicomMaterialDatabase* db = new DicomMaterialDatabase();
+    MaterialDatabase* db = new MaterialDatabase();
     _geometryBuilder->SetDicomData(data);
     _geometryBuilder->SetMaterialDatabase(db);
 }

@@ -11,7 +11,7 @@
 
 #include "Configuration.hh"
 
-#include "DicomMaterialDatabase.hh"
+#include "VMaterialDatabase.hh"
 #include "DicomData.hh"
 #include "dicomConfiguration.hh"
 #include "VoxelParameterisation.hh"
