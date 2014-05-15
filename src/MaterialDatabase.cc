@@ -1,48 +1,70 @@
 #include "MaterialDatabase.hh"
 
-#include <G4Material.hh>
-#include <G4NistManager.hh>
+#include <stdexcept>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
 
+#include <G4Material.hh>
+#include <G4NistManager.hh>
+
+#include "dicomConfiguration.hh"
+
+using namespace g4;
 using namespace g4dicom;
 using namespace std;
 using namespace boost;
 
-G4Material *VMaterialDatabase::GetDefaultMaterial()
+G4Material* MaterialDatabase::GetDefaultMaterial()
 {
-    return G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+    return _materials.begin()->second;
 }
 
-G4Material* MaterialDatabase::GetMaterialByHU(int hu)
+void MaterialDatabase::CreateMaterials()
 {
-    if (hu < minHU)
+    for (auto tempIt = _templates.begin(); tempIt != _templates.end(); tempIt++)
     {
-        return GetDefaultMaterial();
+        auto materials = tempIt->second->CreateMaterials(_step);
+        for (auto matIt = materials.begin(); matIt != materials.end(); matIt++)
+        {
+            _materials[matIt->first] = matIt->second;
+        }
     }
-    if (_materials.find(hu) == _materials.end())
-    {
-        G4NistManager* nistManager = G4NistManager::Instance();
-        double density = primitiveHUtoDensity(hu);
-
-        string newName = "VOXEL_WATER";
-        newName += lexical_cast<string>(hu);
-        _materials[hu] = nistManager->BuildMaterialWithNewDensity(newName, "G4_WATER", density);
-    }
-    return _materials[hu];
 }
 
-MaterialDatabase::MaterialDatabase()
+void MaterialDatabase::ConfigurationChanged(const std::string& key)
 {
-    _materials[minHU] = GetDefaultMaterial();
+    if (key == MATERIALS_HU_STEP)
+    {
+        _step = Configuration::GetValue<int>(key);
+    }
 }
 
 G4Material* MaterialDatabase::GetMaterial(DicomData* data, int x, int y, int z)
 {
-    return GetMaterialByHU(data->GetValue(x, y, z));
+    if (!_materials.size())
+    {
+        CreateMaterials();
+    }
+    int hu = data->GetValue(x, y, z);
+    auto it = _materials.lower_bound(hu);
+    if (it == _materials.end())
+    {
+        throw runtime_error("Material for HU=" 
+            + lexical_cast<string>(hu)
+            + " not found");
+    }
+    else
+    {
+        return it->second;
+    }
 }
 
 vector<G4Material*> MaterialDatabase::GetAllMaterials()
 {
+    if (!_materials.size())
+    {
+        CreateMaterials();
+    }
     vector<G4Material*> materials;
     for (auto it = _materials.begin(); it != _materials.end(); it++)
     {
@@ -50,12 +72,3 @@ vector<G4Material*> MaterialDatabase::GetAllMaterials()
     }
     return materials;
 }
-
-namespace g4dicom
-{
-    double primitiveHUtoDensity(double hu)
-    {
-        return 1.0 * g / cm3 * (hu + 1000.0) / 1000.0;
-    }
-}
-

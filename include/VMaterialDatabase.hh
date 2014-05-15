@@ -2,6 +2,7 @@
 #define VMATERIALDATABASE_HH
 
 #include <vector>
+#include <G4NistManager.hh>
 
 class G4Material;
 
@@ -26,7 +27,10 @@ namespace g4dicom
         /**
          * @brief Material for empty voxels.
          */
-        virtual G4Material* GetDefaultMaterial();
+        virtual G4Material* GetDefaultMaterial()
+        {
+            return G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+        }
 
         /**
          * @brief All materials created by the database.
