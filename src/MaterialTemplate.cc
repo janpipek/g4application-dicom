@@ -30,8 +30,33 @@ template<typename T> G4Material* createMaterial(const string& name, double densi
     return material;
 }
 
+void MaterialTemplate::Validate() const
+{
+    if (minHU > maxHU) throw runtime_error("Max HU must be > min HU.");
+    // Three ways of specification. How many are used?
+    int matSpecs = !!(g4MaterialName.size()) + !!(mixtureElements.size()) + !!(compoundElements.size());
+    if (matSpecs != 1)
+    {
+        throw runtime_error("Must specify exactly one ("
+            + lexical_cast<string>(matSpecs)
+            + "used): G4 material name; element fractions; number of atoms."); 
+    }
+    if (densities.begin()->first != minHU) {
+        throw runtime_error("First density entry must be equal to minimum HU ("
+            + lexical_cast<string>(minHU)
+            + ")");
+    }
+    if (densities.rbegin()->first != maxHU) {
+        throw runtime_error("Last density entry must be equal to maximum HU ("
+            + lexical_cast<string>(minHU)
+            + ")");        
+    }
+}
+
 map<int, G4Material*> MaterialTemplate::CreateMaterials(int step) const
 {
+    Validate();
+
     G4NistManager* nistManager = G4NistManager::Instance();
     map<int, G4Material*> result;
 
