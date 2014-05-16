@@ -17,6 +17,11 @@ double interpolate(double x1, double y1, double x2, double y2, double x)
     return y1 + (x - x1) / (x2 - x1) * (y2 - y1);
 }
 
+/**
+  * @short Create material from amounts (int => compound, double => mixture).
+  *
+  * Template takes advantage of G4Material::AddElement being overloaded.
+  */
 template<typename T> G4Material* createMaterial(const string& name, double density, map<int, T> amounts)
 {
     G4NistManager* nistManager = G4NistManager::Instance();
@@ -25,6 +30,10 @@ template<typename T> G4Material* createMaterial(const string& name, double densi
     for (auto it = amounts.begin(); it != amounts.end(); it++)
     {
         G4Element* element = nistManager->FindOrBuildElement(it->first);
+        if (!element)
+        {
+            throw runtime_error("Cannot add element with z=" + lexical_cast<string>(it->first));
+        }
         material->AddElement(element, it->second);
     }
     return material;
@@ -34,12 +43,12 @@ void MaterialTemplate::Validate() const
 {
     if (minHU > maxHU) throw runtime_error("Max HU must be > min HU.");
     // Three ways of specification. How many are used?
-    int matSpecs = !!(g4MaterialName.size()) + !!(mixtureElements.size()) + !!(compoundElements.size());
+    int matSpecs = !!(g4material.size()) + !!(mixtureElements.size()) + !!(compoundElements.size());
     if (matSpecs != 1)
     {
         throw runtime_error("Must specify exactly one ("
             + lexical_cast<string>(matSpecs)
-            + "used): G4 material name; element fractions; number of atoms."); 
+            + " used): G4 material name; element fractions; number of atoms."); 
     }
     if (densities.begin()->first != minHU) {
         throw runtime_error("First density entry must be equal to minimum HU ("
@@ -64,23 +73,22 @@ map<int, G4Material*> MaterialTemplate::CreateMaterials(int step) const
     {
         string newName = name + "_";
         newName += lexical_cast<string>(hu);
-        G4Material* material = 0;
+        
+        double density = GetDensity(hu) * g/cm3;
 
-        double density = GetDensity(hu);
-
-        if (g4MaterialName.size())
+        if (g4material.size())
         {
-            material = nistManager->BuildMaterialWithNewDensity(newName, g4MaterialName, density);
+            result[hu] = nistManager->BuildMaterialWithNewDensity(newName, g4material, density);
         }
         else if (mixtureElements.size())
         {
-            material = createMaterial(newName, density, mixtureElements);
+            result[hu] = createMaterial(newName, density, mixtureElements);
         }
         else if (compoundElements.size())
         {
-            material = createMaterial(newName, density, mixtureElements);
+            result[hu] = createMaterial(newName, density, compoundElements);
         }
-        result[hu] = material;
+        G4cout << "Created material " << newName << "." << G4endl;
     }
     return result;
 }

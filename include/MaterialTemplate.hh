@@ -48,7 +48,7 @@ namespace g4dicom
         /**
           * @short Name of the material to obtained from G4NistManager.
           */
-        std::string g4MaterialName;
+        std::string g4material;
 
         /**
           * @short (Z, fraction) map of elements in the material.
