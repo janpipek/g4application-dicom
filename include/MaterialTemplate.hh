@@ -69,6 +69,14 @@ namespace g4dicom
           */
         std::map<int, G4Material*> CreateMaterials(int step) const;
 
+        /**
+          * @short Set uniform density over the whole HU range.
+          *
+          * This must be done after minHU and maxHU are set
+          * because it relies on these two values.
+          */
+        void SetUniformDensity(double density);
+
     private:
         /**
           * @short Calculate density for a HU value using interpolation.

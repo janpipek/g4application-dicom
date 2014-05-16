@@ -122,3 +122,10 @@ double MaterialTemplate::GetDensity(int hu) const
         return interpolate(x1, y1, x2, y2, hu);
     }
 }
+
+void MaterialTemplate::SetUniformDensity(double density)
+{
+    densities.clear();
+    densities[minHU] = density;
+    densities[maxHU] = density;
+}
