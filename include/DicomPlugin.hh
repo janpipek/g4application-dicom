@@ -11,6 +11,7 @@ namespace g4dicom
 {
     class DicomMessenger;
     class DicomReader;
+    class MaterialDatabase;
 
     class DicomPlugin : public g4::Plugin
     {
@@ -25,12 +26,16 @@ namespace g4dicom
 
         virtual DicomReader* GetDicomReader() const { return _reader; }
 
+        virtual void LoadMaterialDatabase(const std::string& path);
+
         virtual void OnGeometryInitializing();
 
         virtual void SetCropLimits(const std::vector<int>& cropLimits);
 
     private:
         std::vector<int>* _cropLimits;
+
+        MaterialDatabase* _materialDatabase;
 
         DicomGeometryBuilder* _geometryBuilder;
 

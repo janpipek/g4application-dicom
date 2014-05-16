@@ -9,6 +9,11 @@
 # DICOM images
 /dicom/addFiles /usr/local/share/Geant4-9.6.1/examples/extended/medical/DICOM/1.dcm
 /dicom/readFiles
+/dicom/crop 120 136 120 136 0 0
+/dicom/loadMaterials /home/honza/model/g4application-dicom/examples/materials-water.json
+
+/app/setDouble dicom.phantom_center_z 100.0
+/app/setInt dicom.materials.hu_step 100
 
 # Run
 /run/initialize

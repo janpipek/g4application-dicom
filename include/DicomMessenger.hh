@@ -25,6 +25,8 @@ namespace g4dicom
         virtual void SetNewValue(G4UIcommand *command, G4String newValue);
 
     private:
+        G4UIcmdWithAString* _loadMaterialsCommand;
+
         G4UIcmdWithAString* _addFilesCommand;
 
         G4UIcmdWithoutParameter* _readFilesCommand;

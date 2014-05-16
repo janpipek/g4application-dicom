@@ -12,6 +12,7 @@ DicomMessenger::DicomMessenger(DicomPlugin &plugin)
     _addFilesCommand = new G4UIcmdWithAString("/dicom/addFiles", this);
     _readFilesCommand = new G4UIcmdWithoutParameter("/dicom/readFiles", this);
     _cropCommand = new UIcmdWithNIntegers("/dicom/crop", 6, this);
+    _loadMaterialsCommand = new G4UIcmdWithAString("/dicom/loadMaterials", this);
 }
 
 DicomMessenger::~DicomMessenger()
@@ -19,6 +20,7 @@ DicomMessenger::~DicomMessenger()
     delete _addFilesCommand;
     delete _readFilesCommand;
     delete _cropCommand;
+    delete _loadMaterialsCommand;
 }
 
 G4String DicomMessenger::GetCurrentValue(G4UIcommand *command)
@@ -39,5 +41,9 @@ void DicomMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
     {
         vector<int> cropLimits = _cropCommand->GetNewIntVectorValue(newValue);
         _plugin.SetCropLimits(cropLimits);
+    }
+    else if (command == _loadMaterialsCommand)
+    {
+        _plugin.LoadMaterialDatabase(newValue);
     }
 }

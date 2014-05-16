@@ -5,6 +5,7 @@
 #include "dicomConfiguration.hh"
 #include "DicomMessenger.hh"
 #include "DicomReader.hh"
+#include "MaterialJsonReader.hh"
 
 using namespace g4;
 using namespace std;
@@ -18,6 +19,7 @@ DicomPlugin::DicomPlugin()
     CreateUiDirectory("/dicom/");
     _geometryBuilder = new DicomGeometryBuilder();
     _reader = new DicomReader();
+    _materialDatabase = new MaterialDatabase();
     _messenger = new DicomMessenger(*this);
     SetConfigurationDefaults();
 }
@@ -27,6 +29,7 @@ DicomPlugin::~DicomPlugin()
     delete _reader;
     delete _messenger;
     delete _geometryBuilder;
+    delete _materialDatabase;
     if (_cropLimits)
     {
         delete _cropLimits;
@@ -47,13 +50,22 @@ void DicomPlugin::OnGeometryInitializing()
             "Cannot interpret DICOM slices as a single voxel array."
         );
     }
-    MaterialDatabase* db = new MaterialDatabase();
     _geometryBuilder->SetDicomData(data);
-    _geometryBuilder->SetMaterialDatabase(db);
+    _geometryBuilder->SetMaterialDatabase(_materialDatabase);
 }
 
 void DicomPlugin::SetCropLimits(const vector<int>& cropLimits)
 {
     _cropLimits = new vector<int>();
     *_cropLimits = cropLimits;
+}
+
+void DicomPlugin::LoadMaterialDatabase(const std::string& path)
+{
+    MaterialJsonReader reader;
+    auto templates = reader.LoadTemplates(path);
+    for (auto it = templates.begin(); it != templates.end(); it++)
+    {
+        _materialDatabase->AddMaterialTemplate(*it);
+    }
 }
