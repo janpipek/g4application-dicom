@@ -9,10 +9,12 @@ The plugin is in a VERY EARLY stage of development.
 
 Requirements:
 -------------
-* g4application (possibility to build without it is planned)
+* g4application
 * Geant4
 * GDCM
 * boost
+* json-cpp (for reading material settings)
+* C++11 capable compiler (gcc 4.8 tested)
 
 Macro commands
 --------------    

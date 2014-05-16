@@ -17,14 +17,20 @@ if(DEFINED G4APP_PATH)
 endif()
 
 # Use the FindG4Application.cmake file
-set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH} cmake)
 
 # Find the application library & Geant4
 find_package(G4Application REQUIRED)
 
+# JsonCpp - for parsing several options
+# Answer from: http://stackoverflow.com/questions/18005880/how-to-writing-a-cmake-module-for-jsoncpp
+find_package(JsonCpp REQUIRED)
+
+include_directories(${Jsoncpp_INCLUDE_DIR})
+
+# Geant4
 find_package(Geant4 REQUIRED)
 find_package(Geant4 COMPONENTS qt)
-
 include(${Geant4_USE_FILE})
 
 # Set GDCM libraries
@@ -56,14 +62,10 @@ add_library(dicomPlugin SHARED ${sources} ${headers})
 target_link_libraries(dicomPlugin
     ${Geant4_LIBRARIES}
     ${G4Application_LIBRARY}
-    ${GDCM_LIBRARIES})
+    ${GDCM_LIBRARIES}
+    ${JsonCpp_LIBRARY}
+)
 
 install(TARGETS dicomPlugin DESTINATION .)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x")
-
-
-
- 
-
-
