@@ -18,8 +18,13 @@ G4Material* VoxelParameterisation::ComputeMaterial(G4VPhysicalVolume *currentVol
     }
     int x = parentTouch->GetReplicaNumber(1);
     int y = parentTouch->GetReplicaNumber(0);
-
-    return _voxelMaterials[x][y][repNo];
+    int z = repNo;
+    if (z < 0) // Deal with occasional negative replica number (where from?)
+    {
+        G4cerr << "VoxelParameterisation: z=" << z << " requested. Continuing..." << G4endl;
+        z = 0;
+    }
+    return _voxelMaterials[x][y][z];
 }
 
 void VoxelParameterisation::ComputeTransformation(const G4int copyNo,
