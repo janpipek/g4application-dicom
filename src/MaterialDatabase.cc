@@ -14,6 +14,11 @@ using namespace g4dicom;
 using namespace std;
 using namespace boost;
 
+MaterialDatabase::MaterialDatabase()
+{
+    SetHUStep(Configuration::GetValue<int>(MATERIALS_HU_STEP, 10));
+}
+
 G4Material* MaterialDatabase::GetDefaultMaterial()
 {
     return _materials.begin()->second;
@@ -35,7 +40,16 @@ void MaterialDatabase::ConfigurationChanged(const std::string& key)
 {
     if (key == MATERIALS_HU_STEP)
     {
-        _step = Configuration::GetValue<int>(key);
+        SetHUStep(Configuration::GetValue<int>(key));
+    }
+}
+
+void MaterialDatabase::SetHUStep(int step)
+{
+    _step = step;
+    if (Configuration::GetValue<int>(MATERIALS_HU_STEP) != _step)
+    {
+        Configuration::SetValue(MATERIALS_HU_STEP, _step);
     }
 }
 
