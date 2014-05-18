@@ -13,6 +13,8 @@
 
 #define MATERIALS_HU_STEP "dicom.materials.hu_step"
 
+#define VIS_SHOW_VOXELS "dicom.vis.showVoxels"
+
 namespace g4dicom
 {
     /**
@@ -28,6 +30,8 @@ namespace g4dicom
         g4::Configuration::SetDefaultValue(PHANTOM_CENTER_Z, 0.0);
 
         g4::Configuration::SetDefaultValue(MATERIALS_HU_STEP, 10);
+
+        g4::Configuration::SetDefaultValue(VIS_SHOW_VOXELS, false);
     }
 }
 

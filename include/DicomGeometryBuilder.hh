@@ -2,6 +2,7 @@
 #define DICOMGEOMETRYBUILDER_HH
 
 #include "GeometryBuilder.hh"
+#include "Configuration.hh"
 
 class G4LogicalVolume;
 
@@ -19,6 +20,17 @@ namespace g4dicom
 
         virtual void BuildGeometry(G4LogicalVolume *);
 
+        virtual void ConfigurationChanged(const std::string& key);
+
+        bool VoxelsVisible() const
+        {
+            return _voxelsVisible;
+        }
+
+        /**
+          * @short Set whether individual voxels should be visible.
+          */ 
+        void SetVoxelsVisible(bool value);
         void SetDicomData(DicomData* data)
         {
             _data = data;
@@ -35,6 +47,8 @@ namespace g4dicom
         DicomData* _data;
 
         VMaterialDatabase* _materialDatabase;
+
+        bool _voxelsVisible = false;
     };
 }
 

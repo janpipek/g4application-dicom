@@ -7,6 +7,7 @@
 #include <G4PVPlacement.hh>
 #include <G4PVReplica.hh>
 #include <G4PVParameterised.hh>
+#include <G4VisAttributes.hh>
 #include <globals.hh>
 
 #include "Configuration.hh"
@@ -22,6 +23,20 @@ using namespace g4;
 
 // See http://nipy.org/nibabel/dicom/dicom_orientation.html
 
+void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
+{
+    if (key == VIS_SHOW_VOXELS)
+    {
+        bool val = Configuration::GetValue<int>(key);
+        SetVoxelsVisible(val);
+    }
+}
+
+void DicomGeometryBuilder::SetVoxelsVisible(bool value)
+{
+    _voxelsVisible = value;
+    Configuration::SetValue(VIS_SHOW_VOXELS, value);
+}
 void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
 {
     if (!_data)
@@ -89,6 +104,13 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
         new G4LogicalVolume(solYReplica, air, yReplicaName);
     G4LogicalVolume* logZVoxel =
         new G4LogicalVolume(solZVoxel, air, zReplicaName);
+
+    logXReplica->SetVisAttributes(G4VisAttributes::Invisible);
+    logYReplica->SetVisAttributes(G4VisAttributes::Invisible); 
+    if (!_voxelsVisible)
+    {
+        logZVoxel->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
     // Place physical volumes for x&y
     new G4PVReplica(xReplicaName, logXReplica, logContainer, kXAxis, dims[0], voxelSize[0]);
