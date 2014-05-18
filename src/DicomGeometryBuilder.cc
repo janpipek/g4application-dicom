@@ -1,5 +1,7 @@
 #include "DicomGeometryBuilder.hh"
 
+#include <stdexcept>
+
 #include <G4LogicalVolume.hh>
 #include <G4Box.hh>
 #include <G4Material.hh>
@@ -30,6 +32,24 @@ void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
         bool val = Configuration::GetValue<int>(key);
         SetVoxelsVisible(val);
     }
+    else if (key == PHANTOM_CENTER_X)
+    {
+        double val = Configuration::GetValue<double>(key) * mm;
+        G4ThreeVector newCenter(val, _phantomCenter.getY(), _phantomCenter.getZ());
+        SetPhantomCenter(newCenter);
+    }
+    else if (key == PHANTOM_CENTER_Y)
+    {
+        double val = Configuration::GetValue<double>(key) * mm;
+        G4ThreeVector newCenter(_phantomCenter.getX(), val, _phantomCenter.getZ());
+        SetPhantomCenter(newCenter);
+    }
+    else if (key == PHANTOM_CENTER_Z)
+    {
+        double val = Configuration::GetValue<double>(key) * mm;
+        G4ThreeVector newCenter(_phantomCenter.getX(), _phantomCenter.getY(), val);
+        SetPhantomCenter(newCenter);
+    }
 }
 
 void DicomGeometryBuilder::SetVoxelsVisible(bool value)
@@ -37,11 +57,34 @@ void DicomGeometryBuilder::SetVoxelsVisible(bool value)
     _voxelsVisible = value;
     Configuration::SetValue(VIS_SHOW_VOXELS, value);
 }
+
+void DicomGeometryBuilder::SetPhantomCenter(const G4ThreeVector& position)
+{
+    bool positionChanged = (_phantomCenter != position);
+    if (positionChanged)
+    {
+        _phantomCenter = position;
+        Configuration::SetValue(PHANTOM_CENTER_X, position.getX() / mm);
+        Configuration::SetValue(PHANTOM_CENTER_Y, position.getX() / mm);
+        Configuration::SetValue(PHANTOM_CENTER_Z, position.getX() / mm);
+
+        if (_physContainer)
+        {
+            _physContainer->SetTranslation(_phantomCenter); // Is this ok?
+            GeometryChanged();
+        }
+    }
+}
+
 void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
 {
     if (!_data)
     {
-        // Throw an exception
+        throw runtime_error("Cannot build geometry without DICOM data.");
+    }
+    if (!_materialDatabase)
+    {
+        throw runtime_error("Cannot build geometry without material data.");   
     }
     vector<int> dims = _data->GetDimensions();
     G4cout << "Building DICOM voxel geometry of "
@@ -53,20 +96,15 @@ void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
         << " x " << totalSize[1] << " x " << totalSize[2] << " mm."
         << G4endl;
 
-    // Get phantom position from configuration
-    double centerX = Configuration::GetValue<double>(PHANTOM_CENTER_X);
-    double centerY = Configuration::GetValue<double>(PHANTOM_CENTER_Y);
-    double centerZ = Configuration::GetValue<double>(PHANTOM_CENTER_Z);
-    G4ThreeVector center(centerX, centerY, centerZ);
-
     G4LogicalVolume* logContainer = BuildLogicalVolume();
-    new G4PVPlacement(0,                // Rotation
-        center,                         // Position
-        logContainer,                   // The logic volume
-        "phantomContainer",             // Name
-        logWorld,                       // Mother
-        false,                          // No op. bool.
-        1);                             // Copy number
+    _physContainer = 
+        new G4PVPlacement(0,                // Rotation
+            _phantomCenter,                 // Position
+            logContainer,                   // The logic volume
+            "phantomContainer",             // Name
+            logWorld,                       // Mother
+            false,                          // No op. bool.
+            1);                             // Copy number
 }
 
 G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
@@ -130,7 +168,7 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
 }
 
 DicomGeometryBuilder::DicomGeometryBuilder()
-    : _data(0), _materialDatabase(0)
+    : _data(0), _materialDatabase(0), _phantomCenter(0., 0., 0.), _physContainer(0)
 {
 
 }
