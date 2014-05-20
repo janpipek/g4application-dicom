@@ -4,37 +4,23 @@
 #include <stdexcept>
 #include <cmath>
 #include <json/reader.h>
+#include <globals.hh>
+
+#include "util/json.hh"
 
 #include "MaterialTemplate.hh"
-#include "globals.hh"
 
 using namespace g4dicom;
 using namespace std;
+using namespace g4::util;
 
-template<typename T> T readValue(const Json::Value& value);
-
-template<typename T> T parseAndCheckValue(const Json::Value& value, const string& name)
+template<typename T> T parseAndCheckValue(const Json::Value& value, const std::string& name)
 {
     if (!value.isMember(name)) 
     {
-        throw runtime_error(string("JSON does not contain value \"") + name + "\"");
+        throw std::runtime_error(std::string("JSON does not contain value \"") + name + "\"");
     }
-    return readValue<T>(value[name]);
-}
-
-template<> double readValue<double>(const Json::Value& value)
-{
-    return value.asDouble();
-}
-
-template<> string readValue<string>(const Json::Value& value)
-{
-    return value.asString();
-}
-
-template<> int readValue<int>(const Json::Value& value)
-{
-    return value.asInt();
+    return readJsonValue<T>(value[name]);
 }
 
 void readBaseMaterial(const Json::Value& materialJson, MaterialTemplate* tmpl)
@@ -104,34 +90,20 @@ vector<MaterialTemplate*> MaterialJsonReader::LoadTemplates(const std::string& p
 {
     G4cout << "Loading materials from " << path << "..." << G4endl;
 
-    // Read the file
-    ifstream file(path);
-    if (!file)
-    {
-        throw runtime_error("File does not exist.");
-    }
-    string content(
-        (std::istreambuf_iterator<char>(file) ),
-        (std::istreambuf_iterator<char>()    )
-    );
-
-    Json::Value root;
-    Json::Reader reader;
-    
-    reader.parse(content, root);
-    if (!root.isArray())
+    shared_ptr<Json::Value> root = parseJsonFile(path);
+    if (!root->isArray())
     {
         throw runtime_error("Root JSON element is not an array.");
     }
-    if (!root.size())
+    if (!root->size())
     {
         throw runtime_error("Root JSON element is empty.");
     }
 
     vector<MaterialTemplate*> templates;
-    for (int index = 0; index < root.size(); ++index)
+    for (int index = 0; index < root->size(); ++index)
     {
-        Json::Value materialJson = root[index];
+        Json::Value materialJson = root.get()[index];
         MaterialTemplate* tmpl = new MaterialTemplate();
 
         tmpl->name = parseAndCheckValue<string>(materialJson, "name");
