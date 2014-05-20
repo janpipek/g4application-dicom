@@ -8,11 +8,12 @@ class G4Material;
 #include "Configuration.hh"
 
 #include "VMaterialDatabase.hh"
-#include "DicomData.hh"
 #include "MaterialTemplate.hh"
 
 namespace g4dicom
 {
+    class DicomData;
+
     /**
       * @short Basic implementation of a material database.
       *

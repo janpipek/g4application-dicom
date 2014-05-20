@@ -2,10 +2,14 @@
 #define DICOMMESSENGER_HH
 
 #include <G4UImessenger.hh>
-#include <G4UIcmdWithAString.hh>
-#include <G4UIcmdWithoutParameter.hh>
 
-#include "ui/UIcmdWithNIntegers.hh"
+class G4UIcmdWithAString;
+class G4UIcmdWithoutParameter;
+
+namespace g4
+{
+    class UIcmdWithNIntegers;    
+}
 
 namespace g4dicom
 {

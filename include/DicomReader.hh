@@ -3,7 +3,11 @@
 
 #include <string>
 #include <vector>
-#include <gdcmImage.h>
+
+namespace gdcm
+{
+    class Image;
+}
 
 namespace g4dicom
 {

@@ -1,11 +1,13 @@
 #include "DicomReader.hh"
 
+#include <glob.h>
+
 #include <globals.hh>
+
+#include <gdcmImage.h>
 #include <gdcmImageReader.h>
 #include <gdcmPixelFormat.h>
 #include <gdcmRescaler.h>
-
-#include <glob.h>
 
 #include "DicomData.hh"
 #include "DicomSlice.hh"

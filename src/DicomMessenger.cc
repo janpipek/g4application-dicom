@@ -1,4 +1,10 @@
 #include "DicomMessenger.hh"
+
+#include <G4UIcmdWithAString.hh>
+#include <G4UIcmdWithoutParameter.hh>
+
+#include "ui/UIcmdWithNIntegers.hh"
+
 #include "DicomPlugin.hh"
 #include "DicomReader.hh"
 

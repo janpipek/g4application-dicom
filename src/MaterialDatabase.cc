@@ -7,6 +7,7 @@
 #include <G4Material.hh>
 #include <G4NistManager.hh>
 
+#include "DicomData.hh"
 #include "dicomConfiguration.hh"
 
 using namespace g4;

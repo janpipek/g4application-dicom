@@ -1,6 +1,8 @@
 #ifndef DICOMGEOMETRYBUILDER_HH
 #define DICOMGEOMETRYBUILDER_HH
 
+#include <G4ThreeVector.hh>
+
 #include "GeometryBuilder.hh"
 #include "Configuration.hh"
 
