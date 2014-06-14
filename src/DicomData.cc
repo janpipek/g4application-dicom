@@ -28,10 +28,10 @@ void DicomData::Add(DicomSlice *slice)
     _validity = 0;
     _sorted = false;
     vector<int> dims = slice->GetDimensions();
-    G4cout << "New data slice registered, dimensions: "
+    /* G4cout << "New data slice registered, dimensions: "
            << dims[0] << " x "
            << dims[1] << " x "
-           << dims[2] << G4endl;
+           << dims[2] << G4endl;*/
     _slices.push_back(slice);
 }
 

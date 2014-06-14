@@ -13,6 +13,7 @@
 #include "DicomSlice.hh"
 
 using namespace g4dicom;
+using namespace std;
 
 DicomReader::DicomReader()
     : _data(0)
@@ -49,6 +50,7 @@ void DicomReader::ReadFiles()
     }
     else
     {
+        int read = 0;
         _data = new DicomData();
 
         for (auto it = _paths.begin(); it != _paths.end(); it++)
@@ -59,22 +61,23 @@ void DicomReader::ReadFiles()
             {
                 gdcm::ImageReader reader;
                 char* path = res.gl_pathv[i];
-                G4cout << "Reading DICOM file " << path << "..." << G4endl;
+                // G4cout << "Reading DICOM file " << path << "..." << G4endl;
                 reader.SetFileName(path);
                 if (!reader.Read())
                 {
                     G4Exception("DicomReader",
                         "FileCannotBeRead", FatalException,
-                        "Cannot read DICOM file."
-                        // TODO: add path
+                        (string("Cannot read DICOM file: ") + string(path)).c_str()
                     );
                 }
                 gdcm::Image image = reader.GetImage();
                 DicomSlice* slice = GetSlice(&image);
                 _data->Add(slice);
+                read++;
             }
             globfree(&res);
         }
+        G4cout << read << " files read." << G4endl;
     }
 }
 
@@ -86,6 +89,8 @@ DicomData* DicomReader::GetData()
     }
     return _data;
 }
+
+// #include <algorithm>
 
 DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
 {
@@ -135,6 +140,10 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
 
     const double* spacing = image->GetSpacing();
     slice->spacing.assign(spacing, spacing + 3);
+
+    // DEBUG
+    /* cout << "Max: " <<  *std::max_element(slice->data.data(), slice->data.data() + slice->GetSize()) << endl;
+    cout << "Min: " <<  *std::min_element(slice->data.data(), slice->data.data() + slice->GetSize()) << endl;*/
 
     return slice;
 }

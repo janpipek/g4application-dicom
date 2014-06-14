@@ -88,7 +88,7 @@ map<int, G4Material*> MaterialTemplate::CreateMaterials(int step) const
         {
             result[hu] = createMaterial(newName, density, compoundElements);
         }
-        G4cout << "Created material " << newName << "." << G4endl;
+        /* G4cout << "Created material " << newName << "." << G4endl; */
     }
     return result;
 }

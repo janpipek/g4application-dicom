@@ -90,20 +90,21 @@ vector<MaterialTemplate*> MaterialJsonReader::LoadTemplates(const std::string& p
 {
     G4cout << "Loading materials from " << path << "..." << G4endl;
 
-    shared_ptr<Json::Value> root = parseJsonFile(path);
-    if (!root->isArray())
+    shared_ptr<Json::Value> pRoot = parseJsonFile(path);
+    if (!pRoot->isArray())
     {
         throw runtime_error("Root JSON element is not an array.");
     }
-    if (!root->size())
+    if (!pRoot->size())
     {
         throw runtime_error("Root JSON element is empty.");
     }
 
     vector<MaterialTemplate*> templates;
-    for (int index = 0; index < root->size(); ++index)
+    Json::Value& root = *pRoot;
+    for (int index = 0; index < root.size(); ++index)
     {
-        Json::Value materialJson = root.get()[index];
+        Json::Value materialJson = root[index];
         MaterialTemplate* tmpl = new MaterialTemplate();
 
         tmpl->name = parseAndCheckValue<string>(materialJson, "name");
@@ -113,7 +114,7 @@ vector<MaterialTemplate*> MaterialJsonReader::LoadTemplates(const std::string& p
         readBaseMaterial(materialJson, tmpl);
         readDensities(materialJson, tmpl);
         
-        G4cout << "Found material template " << tmpl->name << G4endl;
+        // G4cout << "Found material template " << tmpl->name << G4endl;
         templates.push_back(tmpl);
     }
     
