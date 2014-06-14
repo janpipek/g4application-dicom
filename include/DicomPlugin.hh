@@ -13,6 +13,11 @@ namespace g4dicom
     class DicomReader;
     class MaterialDatabase;
 
+    /**
+      * @short The main class of the DICOM plugin for g4aplication.
+      *
+      * It is automatically loaded.
+      */
     class DicomPlugin : public g4::Plugin
     {
     public:

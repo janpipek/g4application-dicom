@@ -25,10 +25,16 @@ namespace g4dicom
 
         virtual ~DicomReader();
 
+        /**
+          * @short Add a filename / glob pattern to be read.
+          */
         void AddFiles(const std::string& path);
 
         void ReadFiles();
 
+        /**
+          * @short Get all data from read files.
+          */
         DicomData* GetData();
 
         bool IsRead() const { return _data != 0; }
