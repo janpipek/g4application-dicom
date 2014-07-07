@@ -168,9 +168,11 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
 }
 
 DicomGeometryBuilder::DicomGeometryBuilder()
-    : _data(0), _materialDatabase(0), _phantomCenter(0., 0., 0.), _physContainer(0)
+    : _data(0), _materialDatabase(0), _physContainer(0)
 {
-
+    _phantomCenter.setX(Configuration::GetValue(PHANTOM_CENTER_X, 0.));
+    _phantomCenter.setY(Configuration::GetValue(PHANTOM_CENTER_Y, 0.));
+    _phantomCenter.setZ(Configuration::GetValue(PHANTOM_CENTER_Z, 0.));
 }
 
 DicomGeometryBuilder::~DicomGeometryBuilder()

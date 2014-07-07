@@ -19,7 +19,7 @@ namespace g4dicom
       *
       * The voxel phantom is represented as a single box
       * that contains 2 levels of replicas (in x & y axes)
-      * and parameterized volume in the third level.
+      * and parameterized volume in the third level (z axis).
       *
       * Materials are described using VoxelParameterisation
       * that is built from material database and DICOM data.
