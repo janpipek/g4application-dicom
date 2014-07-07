@@ -65,8 +65,8 @@ void DicomGeometryBuilder::SetPhantomCenter(const G4ThreeVector& position)
     {
         _phantomCenter = position;
         Configuration::SetValue(PHANTOM_CENTER_X, position.getX() / mm);
-        Configuration::SetValue(PHANTOM_CENTER_Y, position.getX() / mm);
-        Configuration::SetValue(PHANTOM_CENTER_Z, position.getX() / mm);
+        Configuration::SetValue(PHANTOM_CENTER_Y, position.getY() / mm);
+        Configuration::SetValue(PHANTOM_CENTER_Z, position.getZ() / mm);
 
         if (_physContainer)
         {
