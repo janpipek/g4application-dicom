@@ -3,7 +3,6 @@
 #include <fstream>
 #include <stdexcept>
 #include <cmath>
-#include <json/reader.h>
 #include <globals.hh>
 
 #include "util/json.hh"
