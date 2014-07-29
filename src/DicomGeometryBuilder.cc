@@ -29,24 +29,24 @@ void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
 {
     if (key == VIS_SHOW_VOXELS)
     {
-        bool val = Configuration::GetValue<int>(key);
+        bool val = Configuration::Get<int>(key);
         SetVoxelsVisible(val);
     }
     else if (key == PHANTOM_CENTER_X)
     {
-        double val = Configuration::GetValue<double>(key) * mm;
+        double val = Configuration::Get<double>(key) * mm;
         G4ThreeVector newCenter(val, _phantomCenter.getY(), _phantomCenter.getZ());
         SetPhantomCenter(newCenter);
     }
     else if (key == PHANTOM_CENTER_Y)
     {
-        double val = Configuration::GetValue<double>(key) * mm;
+        double val = Configuration::Get<double>(key) * mm;
         G4ThreeVector newCenter(_phantomCenter.getX(), val, _phantomCenter.getZ());
         SetPhantomCenter(newCenter);
     }
     else if (key == PHANTOM_CENTER_Z)
     {
-        double val = Configuration::GetValue<double>(key) * mm;
+        double val = Configuration::Get<double>(key) * mm;
         G4ThreeVector newCenter(_phantomCenter.getX(), _phantomCenter.getY(), val);
         SetPhantomCenter(newCenter);
     }
@@ -55,7 +55,7 @@ void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
 void DicomGeometryBuilder::SetVoxelsVisible(bool value)
 {
     _voxelsVisible = value;
-    Configuration::SetValue(VIS_SHOW_VOXELS, value);
+    Configuration::Set(VIS_SHOW_VOXELS, value);
 }
 
 void DicomGeometryBuilder::SetPhantomCenter(const G4ThreeVector& position)
@@ -64,9 +64,9 @@ void DicomGeometryBuilder::SetPhantomCenter(const G4ThreeVector& position)
     if (positionChanged)
     {
         _phantomCenter = position;
-        Configuration::SetValue(PHANTOM_CENTER_X, position.getX() / mm);
-        Configuration::SetValue(PHANTOM_CENTER_Y, position.getY() / mm);
-        Configuration::SetValue(PHANTOM_CENTER_Z, position.getZ() / mm);
+        Configuration::Set(PHANTOM_CENTER_X, position.getX() / mm);
+        Configuration::Set(PHANTOM_CENTER_Y, position.getY() / mm);
+        Configuration::Set(PHANTOM_CENTER_Z, position.getZ() / mm);
 
         if (_physContainer)
         {
@@ -170,9 +170,9 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
 DicomGeometryBuilder::DicomGeometryBuilder()
     : _data(0), _materialDatabase(0), _physContainer(0)
 {
-    _phantomCenter.setX(Configuration::GetValue(PHANTOM_CENTER_X, 0.));
-    _phantomCenter.setY(Configuration::GetValue(PHANTOM_CENTER_Y, 0.));
-    _phantomCenter.setZ(Configuration::GetValue(PHANTOM_CENTER_Z, 0.));
+    _phantomCenter.setX(Configuration::Get(PHANTOM_CENTER_X, 0.));
+    _phantomCenter.setY(Configuration::Get(PHANTOM_CENTER_Y, 0.));
+    _phantomCenter.setZ(Configuration::Get(PHANTOM_CENTER_Z, 0.));
 }
 
 DicomGeometryBuilder::~DicomGeometryBuilder()

@@ -21,7 +21,7 @@ namespace g4dicom
       * material "templates" that contain a specific chemical
       * composition and varying density (@see MaterialTemplate).
       */
-    class MaterialDatabase : public VMaterialDatabase, g4::ConfigurationListener
+    class MaterialDatabase : public VMaterialDatabase, g4::ConfigurationObserver
     {
     public:
         MaterialDatabase();

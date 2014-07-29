@@ -17,7 +17,7 @@ using namespace boost;
 
 MaterialDatabase::MaterialDatabase()
 {
-    SetHUStep(Configuration::GetValue<int>(MATERIALS_HU_STEP, 10));
+    SetHUStep(Configuration::Get<int>(MATERIALS_HU_STEP, 10));
 }
 
 G4Material* MaterialDatabase::GetDefaultMaterial()
@@ -41,16 +41,16 @@ void MaterialDatabase::ConfigurationChanged(const std::string& key)
 {
     if (key == MATERIALS_HU_STEP)
     {
-        SetHUStep(Configuration::GetValue<int>(key));
+        SetHUStep(Configuration::Get<int>(key));
     }
 }
 
 void MaterialDatabase::SetHUStep(int step)
 {
     _step = step;
-    if (Configuration::GetValue<int>(MATERIALS_HU_STEP) != _step)
+    if (Configuration::Get<int>(MATERIALS_HU_STEP) != _step)
     {
-        Configuration::SetValue(MATERIALS_HU_STEP, _step);
+        Configuration::Set(MATERIALS_HU_STEP, _step);
     }
 }
 

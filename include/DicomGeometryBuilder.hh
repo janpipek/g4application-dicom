@@ -24,7 +24,7 @@ namespace g4dicom
       * Materials are described using VoxelParameterisation
       * that is built from material database and DICOM data.
       */
-    class DicomGeometryBuilder : public g4::GeometryBuilder, g4::ConfigurationListener
+    class DicomGeometryBuilder : public g4::GeometryBuilder, g4::ConfigurationObserver
     {
     public:
         DicomGeometryBuilder();
