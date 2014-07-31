@@ -81,6 +81,8 @@ namespace g4dicom
           */
         void SetPhantomCenter(const G4ThreeVector& position);
 
+        G4RotationMatrix GetPhantomRotation() const { return _rotationMatrix; }
+
         void SetPhantomRotation(const G4RotationMatrix& rotation);
 
         G4ThreeVector GetPhantomCenter() const { return _phantomCenter; }

@@ -5,6 +5,8 @@
 
 class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
+class G4UIcmdWithADouble;
+class G4UIcmdWithADoubleAndUnit;
 
 namespace g4
 {
@@ -36,6 +38,12 @@ namespace g4dicom
         G4UIcmdWithoutParameter* _readFilesCommand;
 
         g4::UIcmdWithNIntegers* _cropCommand;
+
+        G4UIcmdWithADoubleAndUnit* _rotateXPhantomCommand;
+
+        G4UIcmdWithADoubleAndUnit* _rotateYPhantomCommand;
+
+        G4UIcmdWithADoubleAndUnit* _rotateZPhantomCommand;
 
         DicomPlugin& _plugin;
     };
