@@ -6,6 +6,7 @@
 
 #include "GeometryBuilder.hh"
 #include "Configuration.hh"
+#include "util/Singleton.hh"
 
 class G4LogicalVolume;
 class G4PVPlacement;
@@ -25,7 +26,10 @@ namespace g4dicom
       * Materials are described using VoxelParameterisation
       * that is built from material database and DICOM data.
       */
-    class DicomGeometryBuilder : public g4::GeometryBuilder, g4::ConfigurationObserver
+    class DicomGeometryBuilder :
+        public g4::GeometryBuilder,
+        public g4::util::Singleton<DicomGeometryBuilder>,
+        private g4::ConfigurationObserver
     {
     public:
         DicomGeometryBuilder();

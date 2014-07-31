@@ -27,7 +27,7 @@ namespace g4dicom
 
         virtual const std::string GetName() const { return "DICOM Plugin"; }
 
-        virtual g4::GeometryBuilder* GetGeometryBuilder() { return _geometryBuilder; }
+        virtual g4::GeometryBuilder* GetGeometryBuilder() { return &DicomGeometryBuilder::Instance(); }
 
         virtual DicomReader* GetDicomReader() const { return _reader; }
 
