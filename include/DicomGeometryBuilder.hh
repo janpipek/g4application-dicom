@@ -2,6 +2,7 @@
 #define DICOMGEOMETRYBUILDER_HH
 
 #include <G4ThreeVector.hh>
+#include <G4RotationMatrix.hh>
 
 #include "GeometryBuilder.hh"
 #include "Configuration.hh"
@@ -76,6 +77,8 @@ namespace g4dicom
           */
         void SetPhantomCenter(const G4ThreeVector& position);
 
+        void SetPhantomRotation(const G4RotationMatrix& rotation);
+
         G4ThreeVector GetPhantomCenter() const { return _phantomCenter; }
 
         G4LogicalVolume* BuildLogicalVolume();
@@ -88,6 +91,8 @@ namespace g4dicom
         bool _voxelsVisible = false;
 
         G4ThreeVector _phantomCenter;
+
+        G4RotationMatrix _rotationMatrix; // Pointer to this will be used
 
         G4PVPlacement* _physContainer;
     };

@@ -70,7 +70,21 @@ void DicomGeometryBuilder::SetPhantomCenter(const G4ThreeVector& position)
 
         if (_physContainer)
         {
-            _physContainer->SetTranslation(_phantomCenter); // Is this ok?
+            _physContainer->SetTranslation(_phantomCenter);
+            GeometryChanged();
+        }
+    }
+}
+
+void DicomGeometryBuilder::SetPhantomRotation(const G4RotationMatrix& rotation)
+{
+    bool rotationChanged = (_rotationMatrix != rotation);
+    if (rotationChanged)
+    {
+        _rotationMatrix = rotation;
+        if (_physContainer)
+        {
+            _physContainer->SetRotation(&_rotationMatrix);
             GeometryChanged();
         }
     }
@@ -98,7 +112,7 @@ void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
 
     G4LogicalVolume* logContainer = BuildLogicalVolume();
     _physContainer = 
-        new G4PVPlacement(0,                // Rotation
+        new G4PVPlacement(&_rotationMatrix, // Rotation
             _phantomCenter,                 // Position
             logContainer,                   // The logic volume
             "phantomContainer",             // Name
