@@ -42,8 +42,6 @@ namespace g4dicom
 
         MaterialDatabase* _materialDatabase;
 
-        DicomGeometryBuilder* _geometryBuilder;
-
         DicomMessenger* _messenger;
 
         DicomReader* _reader;

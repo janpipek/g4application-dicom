@@ -17,7 +17,6 @@ DicomPlugin::DicomPlugin()
     : _cropLimits(0)
 {
     CreateUiDirectory("/dicom/");
-    _geometryBuilder = new DicomGeometryBuilder();
     _reader = new DicomReader();
     _materialDatabase = new MaterialDatabase();
     _messenger = new DicomMessenger(*this);
@@ -28,7 +27,6 @@ DicomPlugin::~DicomPlugin()
 {
     delete _reader;
     delete _messenger;
-    delete _geometryBuilder;
     delete _materialDatabase;
     if (_cropLimits)
     {
@@ -50,8 +48,8 @@ void DicomPlugin::OnGeometryInitializing()
             "Cannot interpret DICOM slices as a single voxel array."
         );
     }
-    _geometryBuilder->SetDicomData(data);
-    _geometryBuilder->SetMaterialDatabase(_materialDatabase);
+    DicomGeometryBuilder::Instance().SetDicomData(data);
+    DicomGeometryBuilder::Instance().SetMaterialDatabase(_materialDatabase);
 }
 
 void DicomPlugin::SetCropLimits(const vector<int>& cropLimits)
