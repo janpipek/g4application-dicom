@@ -25,14 +25,16 @@ DicomMessenger::DicomMessenger(DicomPlugin &plugin)
     _cropCommand = new UIcmdWithNIntegers("/dicom/crop", 6, this);
     _loadMaterialsCommand = new G4UIcmdWithAString("/dicom/loadMaterials", this);
 
-    _rotateXPhantomCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateXPhantom", this);
-    _rotateXPhantomCommand->SetUnitCandidates("deg rad");
+    _rotateXCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateX", this);
+    _rotateXCommand->SetUnitCandidates("deg rad");
 
-    _rotateYPhantomCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateYPhantom", this);
-    _rotateYPhantomCommand->SetUnitCandidates("deg rad");
+    _rotateYCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateY", this);
+    _rotateYCommand->SetUnitCandidates("deg rad");
 
-    _rotateZPhantomCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateZPhantom", this);
-    _rotateZPhantomCommand->SetUnitCandidates("deg rad");
+    _rotateZCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateZ", this);
+    _rotateZCommand->SetUnitCandidates("deg rad");
+
+    _resetRotationCommand = new G4UIcmdWithoutParameter("/dicom/resetRotation", this);
 }
 
 DicomMessenger::~DicomMessenger()
@@ -42,9 +44,10 @@ DicomMessenger::~DicomMessenger()
     delete _cropCommand;
     delete _loadMaterialsCommand;
 
-    delete _rotateXPhantomCommand;
-    delete _rotateYPhantomCommand;
-    delete _rotateZPhantomCommand;
+    delete _rotateXCommand;
+    delete _rotateYCommand;
+    delete _rotateZCommand;
+    delete _resetRotationCommand;
 }
 
 
@@ -82,16 +85,20 @@ void DicomMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
         _plugin.LoadMaterialDatabase(newValue);
     }
 
-    else if (command == _rotateXPhantomCommand)
+    else if (command == _rotateXCommand)
     {
         DoRotation(newValue, &G4RotationMatrix::rotateX);
     }
-    else if (command == _rotateYPhantomCommand)
+    else if (command == _rotateYCommand)
     {
         DoRotation(newValue, &G4RotationMatrix::rotateY);
     }
-    else if (command == _rotateZPhantomCommand)
+    else if (command == _rotateZCommand)
     {
         DoRotation(newValue, &G4RotationMatrix::rotateZ);
+    }
+    else if (command == _resetRotationCommand)
+    {
+        DicomGeometryBuilder::Instance().SetPhantomRotation(G4RotationMatrix());
     }
 }

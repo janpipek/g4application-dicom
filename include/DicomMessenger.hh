@@ -39,11 +39,13 @@ namespace g4dicom
 
         g4::UIcmdWithNIntegers* _cropCommand;
 
-        G4UIcmdWithADoubleAndUnit* _rotateXPhantomCommand;
+        G4UIcmdWithADoubleAndUnit* _rotateXCommand;
 
-        G4UIcmdWithADoubleAndUnit* _rotateYPhantomCommand;
+        G4UIcmdWithADoubleAndUnit* _rotateYCommand;
 
-        G4UIcmdWithADoubleAndUnit* _rotateZPhantomCommand;
+        G4UIcmdWithADoubleAndUnit* _rotateZCommand;
+
+        G4UIcmdWithoutParameter* _resetRotationCommand;
 
         DicomPlugin& _plugin;
     };

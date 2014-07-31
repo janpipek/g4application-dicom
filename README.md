@@ -19,11 +19,21 @@ Requirements:
 Macro commands
 --------------    
 * /dicom/loadFiles - specify DICOM files to load (using glob syntax). Can be used multiple times.
-* /dicom/readFiles - force reading of files. Not necessary because geometry building does this implicitely.
+* /dicom/readFiles - force reading of files. Not necessary because geometry building does this automatically.
 * /dicom/crop - select only a rectangular subset of voxels. Provide 6 values (xmin, xmax, ymin, ymax, zmin, zmax) as voxel indices, 0 meaning no limit. Zero-based indexing, upper limit is not inclusive.
+* /dicom/rotateX - rotate current setup around X axis
+* /dicom/rotateY - rotate current setup around Y axis
+* /dicom/rotateZ - rotate current setup around Z axis
+* /dicom/resetRotation - reset rotation to the default setting
 
 Configuration values
 --------------------
+* dicom.phantom_center_x
+* dicom.phantom_center_y
+* dicom.phantom_center_z
+* dicom.materials.hu_step - step in HU units when generating table of materialss
+* dicom.vis.showVoxels - whether to visualize individual voxels.
+    Otherwise, only the surrounding box is displayed.
 
 Important Classes
 -----------------
