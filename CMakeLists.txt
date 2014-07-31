@@ -22,11 +22,21 @@ set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH} cmake)
 # Find the application library & Geant4
 find_package(G4Application REQUIRED)
 
+# Boost
+find_package(Boost 1.49 REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
 # JsonCpp - for parsing several options
 # Answer from: http://stackoverflow.com/questions/18005880/how-to-writing-a-cmake-module-for-jsoncpp
-find_package(JsonCpp REQUIRED)
-
-include_directories(${Jsoncpp_INCLUDE_DIR})
+find_package(JsonCpp)
+if(JSONCPP_FOUND)
+    message(STATUS "Using system-wide Json-Cpp")
+    include_directories(${Jsoncpp_INCLUDE_DIR})
+    target_link_libraries(dicomPlugin ${JsonCpp_LIBRARY})
+else(JSONCPP_FOUND)
+    message(STATUS "Using g4application-built-in Json-Cpp")
+    include_directories("${G4APP_SOURCE_PATH}/lib/json/")
+endif(JSONCPP_FOUND)
 
 # Geant4
 find_package(Geant4 REQUIRED)
@@ -63,7 +73,6 @@ target_link_libraries(dicomPlugin
     ${Geant4_LIBRARIES}
     ${G4Application_LIBRARY}
     ${GDCM_LIBRARIES}
-    ${JsonCpp_LIBRARY}
 )
 
 install(TARGETS dicomPlugin DESTINATION .)
