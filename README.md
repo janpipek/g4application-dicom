@@ -5,7 +5,7 @@ based on GDCM.
 
 MIT License (see LICENSE file).
 
-The plugin is in a VERY EARLY stage of development.
+The plugin is in an EARLY stage of development.
 
 Requirements:
 -------------
@@ -15,6 +15,13 @@ Requirements:
 * boost
 * json-cpp (for reading material settings)
 * C++11 capable compiler (gcc 4.8 tested)
+
+Features
+--------
+* Loading DICOM files (Note: tested for CT images with standard orientation and one slice per file, others may cause problems)
+* Construction of voxel geometry
+* Translation and rotation of the geometry
+* Tools for creating materials (defined in external JSON)
 
 Macro commands
 --------------    
@@ -28,12 +35,15 @@ Macro commands
 
 Configuration values
 --------------------
-* dicom.phantom_center_x
-* dicom.phantom_center_y
-* dicom.phantom_center_z
-* dicom.materials.hu_step - step in HU units when generating table of materialss
+* dicom.phantom_center_x (in mm)
+* dicom.phantom_center_y (in mm)
+* dicom.phantom_center_z (in mm)
+* dicom.materials.hu_step - step in HU units when generating table of materials
 * dicom.vis.showVoxels - whether to visualize individual voxels.
     Otherwise, only the surrounding box is displayed.
+* dicom.phantom_rotation_theta - Euler angle theta (in deg)
+* dicom.phantom_rotation_phi - Euler angle phi (in deg)
+* dicom.phantom_rotation_psi - Euler angle psi (in deg)
 
 Important Classes
 -----------------

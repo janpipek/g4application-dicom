@@ -11,6 +11,10 @@
 #define PHANTOM_CENTER_Y "dicom.phantom_center_y"
 #define PHANTOM_CENTER_Z "dicom.phantom_center_z"
 
+#define PHANTOM_ROTATION_THETA "dicom.phantom_rotation_theta"
+#define PHANTOM_ROTATION_PHI "dicom.phantom_rotation_phi"
+#define PHANTOM_ROTATION_PSI "dicom.phantom_rotation_psi"
+
 #define MATERIALS_HU_STEP "dicom.materials.hu_step"
 
 #define VIS_SHOW_VOXELS "dicom.vis.showVoxels"
@@ -28,6 +32,10 @@ namespace g4dicom
         g4::Configuration::SetDefaultValue(PHANTOM_CENTER_X, 0.0);
         g4::Configuration::SetDefaultValue(PHANTOM_CENTER_Y, 0.0);
         g4::Configuration::SetDefaultValue(PHANTOM_CENTER_Z, 0.0);
+
+        g4::Configuration::SetDefaultValue(PHANTOM_ROTATION_THETA, 0.0);
+        g4::Configuration::SetDefaultValue(PHANTOM_ROTATION_PHI, 0.0);
+        g4::Configuration::SetDefaultValue(PHANTOM_ROTATION_PSI, 0.0);
 
         g4::Configuration::SetDefaultValue(MATERIALS_HU_STEP, 10);
 

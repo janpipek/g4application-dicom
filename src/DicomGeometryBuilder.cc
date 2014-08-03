@@ -50,6 +50,27 @@ void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
         G4ThreeVector newCenter(_phantomCenter.getX(), _phantomCenter.getY(), val);
         SetPhantomCenter(newCenter);
     }
+    else if (key == PHANTOM_ROTATION_PHI)
+    {
+        double val = Configuration::Get<double>(key) * deg;
+        G4RotationMatrix rotation = GetPhantomRotation();
+        rotation.setPhi(val);
+        SetPhantomRotation(rotation);
+    }
+    else if (key == PHANTOM_ROTATION_THETA)
+    {
+        double val = Configuration::Get<double>(key) * deg;
+        G4RotationMatrix rotation = GetPhantomRotation();
+        rotation.setTheta(val);
+        SetPhantomRotation(rotation);
+    }
+    else if (key == PHANTOM_ROTATION_PSI)
+    {
+        double val = Configuration::Get<double>(key) * deg;
+        G4RotationMatrix rotation = GetPhantomRotation();
+        rotation.setPsi(val);
+        SetPhantomRotation(rotation);
+    }
 }
 
 void DicomGeometryBuilder::SetVoxelsVisible(bool value)
@@ -82,6 +103,10 @@ void DicomGeometryBuilder::SetPhantomRotation(const G4RotationMatrix& rotation)
     if (rotationChanged)
     {
         _rotationMatrix = rotation;
+        Configuration::Set(PHANTOM_ROTATION_PHI, rotation.getPhi() / deg, this);
+        Configuration::Set(PHANTOM_ROTATION_THETA, rotation.getTheta() / deg, this);
+        Configuration::Set(PHANTOM_ROTATION_PSI, rotation.getPsi() / deg, this);
+
         if (_physContainer)
         {
             _physContainer->SetRotation(&_rotationMatrix);
@@ -184,9 +209,13 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
 DicomGeometryBuilder::DicomGeometryBuilder()
     : _data(0), _materialDatabase(0), _physContainer(0)
 {
-    _phantomCenter.setX(Configuration::Get(PHANTOM_CENTER_X, 0.));
-    _phantomCenter.setY(Configuration::Get(PHANTOM_CENTER_Y, 0.));
-    _phantomCenter.setZ(Configuration::Get(PHANTOM_CENTER_Z, 0.));
+    _phantomCenter.setX(Configuration::Get(PHANTOM_CENTER_X, 0.) * mm);
+    _phantomCenter.setY(Configuration::Get(PHANTOM_CENTER_Y, 0.) * mm);
+    _phantomCenter.setZ(Configuration::Get(PHANTOM_CENTER_Z, 0.) * mm);
+
+    _rotationMatrix.setTheta(Configuration::Get(PHANTOM_ROTATION_THETA, 0.) * deg);
+    _rotationMatrix.setPsi(Configuration::Get(PHANTOM_ROTATION_PSI, 0.) * deg);
+    _rotationMatrix.setPhi(Configuration::Get(PHANTOM_ROTATION_PHI, 0.) * deg);
 }
 
 DicomGeometryBuilder::~DicomGeometryBuilder()

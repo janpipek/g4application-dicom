@@ -19,6 +19,11 @@ namespace g4dicom
 
         void Add(DicomSlice* slice);
 
+        /**
+         * @brief Is the data set valid?
+         *
+         * Lazy evaluation.
+         */
         bool IsValid();
 
         /**
