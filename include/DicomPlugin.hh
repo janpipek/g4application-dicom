@@ -37,8 +37,14 @@ namespace g4dicom
 
         virtual void SetCropLimits(const std::vector<int>& cropLimits);
 
+        void SetAutoCrop(double minHU);
+
     private:
         std::vector<int>* _cropLimits;
+
+        bool _autoCrop;
+
+        double _autoCropMinHU;
 
         MaterialDatabase* _materialDatabase;
 

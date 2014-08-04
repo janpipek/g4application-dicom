@@ -39,6 +39,8 @@ namespace g4dicom
 
         g4::UIcmdWithNIntegers* _cropCommand;
 
+        G4UIcmdWithADouble* _autoCropCommand;
+
         G4UIcmdWithADoubleAndUnit* _rotateXCommand;
 
         G4UIcmdWithADoubleAndUnit* _rotateYCommand;

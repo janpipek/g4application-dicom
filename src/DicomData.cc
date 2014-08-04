@@ -90,6 +90,23 @@ std::vector<int> DicomData::GetDimensions()
     return _dimensions;
 }
 
+std::vector<int> DicomData::GetOriginalDimensions()
+{
+    int dimX = _slices[0]->GetDimensions()[0];
+    int dimY = _slices[0]->GetDimensions()[1];
+    int dimZ = _slices[0]->GetDimensions()[2];
+    for (int i = 1; i < _slices.size(); i++)
+    {
+        dimZ += _slices[i]->GetDimensions()[2];
+    }
+
+    std::vector<int> dims;
+    dims.push_back(dimX);
+    dims.push_back(dimY);
+    dims.push_back(dimZ);
+    return dims;
+}
+
 std::vector<double> DicomData::GetCenter()
 {
     if (!IsValid())
@@ -163,6 +180,47 @@ void DicomData::Crop(std::vector<int> limits)
     _ymax = limits[3];
     _zmin = limits[4];
     _zmax = limits[5];
+}
+
+void DicomData::AutoCrop(double minHU)
+{
+    _validity = 0;
+    _dimensions.clear();
+
+    vector<int> dims = GetOriginalDimensions();
+
+    _xmin = dims[0];
+    _ymin = dims[1];
+    _zmin = dims[2];
+
+    _xmax = 0;
+    _ymax = 0;
+    _zmax = 0;
+
+    for (int x = 0; x < dims[0]; x++)
+    {
+        for (int y = 0; y < dims[1]; y++)
+        {
+            for (int z = 0; z < dims[2]; z++)
+            {
+                double val = _slices[z]->data[x][y][0];
+                if (val > minHU)
+                {
+                    if (x < _xmin) _xmin = x;
+                    if (x > _xmax) _xmax = x;
+                    if (y < _ymin) _ymin = y;
+                    if (y > _ymax) _ymax = y;
+                    if (z < _zmin) _zmin = z;
+                    if (z > _zmax) _zmax = z;
+                }
+            }
+        }
+    }
+
+    if (!((_xmax >= _xmin) && (_ymax >= _ymin) && (_zmax >= _zmin)))
+    {
+        throw runtime_error("No voxel meets the limit.");
+    }
 }
 
 void DicomData::Validate()

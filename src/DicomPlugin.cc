@@ -14,7 +14,7 @@ using namespace g4dicom;
 MAKE_G4_PLUGIN( g4dicom::DicomPlugin )
 
 DicomPlugin::DicomPlugin()
-    : _cropLimits(0)
+    : _cropLimits(0), _autoCrop(false)
 {
     CreateUiDirectory("/dicom/");
     _reader = new DicomReader();
@@ -37,10 +37,15 @@ DicomPlugin::~DicomPlugin()
 void DicomPlugin::OnGeometryInitializing()
 {
     DicomData* data = _reader->GetData();
-    if (_cropLimits)
+    if (_autoCrop)
+    {
+        data->AutoCrop(_autoCropMinHU);
+    }
+    else if (_cropLimits)
     {
         data->Crop(*_cropLimits);
     }
+
     if (!data->IsValid())
     {
         G4Exception("DicomPlugin",
@@ -56,6 +61,12 @@ void DicomPlugin::SetCropLimits(const vector<int>& cropLimits)
 {
     _cropLimits = new vector<int>();
     *_cropLimits = cropLimits;
+}
+
+void DicomPlugin::SetAutoCrop(double minHU)
+{
+    _autoCrop = true;
+    _autoCropMinHU = minHU;
 }
 
 void DicomPlugin::LoadMaterialDatabase(const std::string& path)

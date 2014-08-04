@@ -31,6 +31,8 @@ namespace g4dicom
          */
         std::vector<int> GetDimensions();
 
+        std::vector<int> GetOriginalDimensions();
+
         /**
          * @brief Get the center of DICOM volume.
          *
@@ -69,6 +71,8 @@ namespace g4dicom
          * All 6 value have to be supplied. Zeroes mean no limit though.
          */
         void Crop(std::vector<int> limits);
+
+        void AutoCrop(double minHU);
 
     private:
         std::vector<DicomSlice*> _slices;

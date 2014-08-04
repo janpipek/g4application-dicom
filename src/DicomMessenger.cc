@@ -2,6 +2,7 @@
 
 #include <G4RotationMatrix.hh>
 #include <G4UIcmdWithAString.hh>
+#include <G4UIcmdWithADouble.hh>
 #include <G4UIcmdWithoutParameter.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
 
@@ -22,7 +23,10 @@ DicomMessenger::DicomMessenger(DicomPlugin &plugin)
 
     _addFilesCommand = new G4UIcmdWithAString("/dicom/addFiles", this);
     _readFilesCommand = new G4UIcmdWithoutParameter("/dicom/readFiles", this);
+
     _cropCommand = new UIcmdWithNIntegers("/dicom/crop", 6, this);
+    _autoCropCommand = new G4UIcmdWithADouble("/dicom/autoCrop", this);
+
     _loadMaterialsCommand = new G4UIcmdWithAString("/dicom/loadMaterials", this);
 
     _rotateXCommand = new G4UIcmdWithADoubleAndUnit("/dicom/rotateX", this);
@@ -42,6 +46,7 @@ DicomMessenger::~DicomMessenger()
     delete _addFilesCommand;
     delete _readFilesCommand;
     delete _cropCommand;
+    delete _autoCropCommand;
     delete _loadMaterialsCommand;
 
     delete _rotateXCommand;
@@ -79,6 +84,11 @@ void DicomMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
     {
         vector<int> cropLimits = _cropCommand->GetNewIntVectorValue(newValue);
         _plugin.SetCropLimits(cropLimits);
+    }
+    else if (command == _autoCropCommand)
+    {
+        double minHU = _autoCropCommand->GetNewDoubleValue(newValue);
+        _plugin.SetAutoCrop(minHU);
     }
     else if (command == _loadMaterialsCommand)
     {
