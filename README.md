@@ -34,6 +34,9 @@ Macro commands
 * /dicom/rotateZ - rotate current setup around Z axis
 * /dicom/resetRotation - reset rotation to the default setting
 
+Note: The rotation commands rotate the volume itself, not the coordinate
+frames as standard G4PVPlacement.
+
 Configuration values
 --------------------
 * dicom.phantom_center_x (in mm)

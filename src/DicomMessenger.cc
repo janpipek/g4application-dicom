@@ -66,7 +66,7 @@ void DoRotation(G4String newValue, rotationMethod method)
 {
     double angle = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(newValue);
     G4RotationMatrix originalRotation = DicomGeometryBuilder::Instance().GetPhantomRotation();
-    G4RotationMatrix newRotation = (originalRotation.*method)(angle);
+    G4RotationMatrix newRotation = (originalRotation.*method)(-angle);
     DicomGeometryBuilder::Instance().SetPhantomRotation(newRotation);
 }
 
