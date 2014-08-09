@@ -28,7 +28,7 @@ Macro commands
 * /dicom/loadFiles - specify DICOM files to load (using glob syntax). Can be used multiple times.
 * /dicom/readFiles - force reading of files. Not necessary because geometry building does this automatically.
 * /dicom/crop - select only a rectangular subset of voxels. Provide 6 values (xmin, xmax, ymin, ymax, zmin, zmax) as voxel indices, 0 meaning no limit. Zero-based indexing, upper limit is not inclusive.
-* /dicom/autoCrop - crop the volume to the smallest rectangular box that contains all voxels with Hounsfield value larger than the limit
+* /dicom/autoCrop - crop the volume to the smallest rectangular box that contains all voxels with Hounsfield value larger than the limit (though in most cases manual setting seems better)
 * /dicom/rotateX - rotate current setup around X axis
 * /dicom/rotateY - rotate current setup around Y axis
 * /dicom/rotateZ - rotate current setup around Z axis
