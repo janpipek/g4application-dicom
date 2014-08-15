@@ -37,7 +37,8 @@ G4Material* VoxelParameterisation::ComputeMaterial(G4VPhysicalVolume* currentVol
     }
     else
     {
-        currentVol->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::Invisible);
+        // Do nothing to prevent memory leaks (setting attributes creates copies and copies...)
+        // currentVol->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::Invisible);
     }
     return material;
 }
