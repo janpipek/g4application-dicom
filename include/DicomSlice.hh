@@ -6,6 +6,8 @@
 
 namespace g4dicom
 {
+    class DicomReader;
+
     /**
      * @short Data from one DICOM file.
      *
@@ -17,6 +19,8 @@ namespace g4dicom
     struct DicomSlice
     {
     public:
+        friend class DicomReader;
+
         /**
          * @short Data type of one data element.
          */
@@ -24,12 +28,17 @@ namespace g4dicom
 
         typedef boost::multi_array<basic_type, 3> data_type;
 
-        data_type data;
-
         /**
           * @short Number of data elements along three principial axes.
+          *
+          * In order x, y, z
           */
         std::vector<int> GetDimensions() const;
+
+        basic_type GetValue(int x, int y) const
+        {
+            return data[y][x][0];
+        }
 
         /**
           * @short Total number of data elements.
@@ -50,6 +59,15 @@ namespace g4dicom
           * @short Direction cosines as defined in DICOM.
           */
         std::vector<double> directionCosines;
+
+    private:
+        /**
+         * @brief Raw data
+         *
+         * Warning: Axes are ordered y, x, z!
+         *     GetValue() reverses this to more intuitive interpretation.
+         */
+        data_type data;
     };
 }
 

@@ -45,8 +45,18 @@ namespace g4dicom
          * @brief Get HU value of a voxel.
          *
          * Automatically sorts and validates data if necessary.
+         * Indexes are in cropped coordinates (0 = start of the cropped volume)
          */
         DicomSlice::basic_type GetValue(int x, int y, int z);
+
+        DicomSlice::basic_type GetOriginalValue(int x, int y, int z)
+        {
+            if (!_validity)
+            {
+                Validate();
+            }
+            return _slices[z]->GetValue(x, y);
+        }
 
         /**
          * @short Physical dimensions of one voxel.

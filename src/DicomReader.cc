@@ -116,7 +116,7 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
     image->GetBuffer(inBuffer);
 
     // Prepare where to write
-    slice->data.resize(boost::extents[x][y][z]);
+    slice->data.resize(boost::extents[y][x][z]);
     char* outBuffer = (char*)slice->data.data();
 
     // Prepare rescaler

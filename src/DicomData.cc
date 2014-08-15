@@ -130,11 +130,7 @@ std::vector<double> DicomData::GetCenter()
 
 DicomSlice::basic_type DicomData::GetValue(int x, int y, int z)
 {
-    if (!_validity)
-    {
-        Validate();
-    }
-    return _slices[z+_zmin]->data[x+_xmin][y+_ymin][0];
+    return GetOriginalValue(x + _xmin, y + _ymin, z + _zmin);
 }
 
 vector<double> DicomData::GetVoxelSize()
@@ -203,7 +199,7 @@ void DicomData::AutoCrop(double minHU)
         {
             for (int z = 0; z < dims[2]; z++)
             {
-                double val = _slices[z]->data[x][y][0];
+                double val = GetOriginalValue(x, y, z);
                 if (val > minHU)
                 {
                     if (x < _xmin) _xmin = x;
@@ -229,6 +225,10 @@ void DicomData::Validate()
     if (!_sorted)
     {
         SortSlices();
+    }
+    if (!_slices.size())
+    {
+        throw runtime_error("Cannot validate empty set of files.");
     }
     std::vector<double> cosines0 = _slices[0]->directionCosines;
     std::vector<double> spacing0 = _slices[0]->spacing;
