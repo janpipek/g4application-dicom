@@ -2,15 +2,19 @@
 
 #include <G4VTouchable.hh>
 #include <G4VPhysicalVolume.hh>
+#include <G4LogicalVolume.hh>
+#include <G4VisAttributes.hh>
 
 #include "VMaterialDatabase.hh"
 #include "DicomData.hh"
+#include "dicomConfiguration.hh"
 
 using namespace g4dicom;
 using namespace boost;
 using namespace std;
+using namespace g4;
 
-G4Material* VoxelParameterisation::ComputeMaterial(G4VPhysicalVolume *currentVol, const G4int repNo, const G4VTouchable *parentTouch)
+G4Material* VoxelParameterisation::ComputeMaterial(G4VPhysicalVolume* currentVol, const G4int repNo, const G4VTouchable* parentTouch)
 {
     if (!parentTouch)
     {
@@ -24,7 +28,18 @@ G4Material* VoxelParameterisation::ComputeMaterial(G4VPhysicalVolume *currentVol
         G4cerr << "VoxelParameterisation: z=" << z << " requested. Continuing..." << G4endl;
         z = 0;
     }
-    return _voxelMaterials[x][y][z];
+    G4Material* material = _voxelMaterials[x][y][z];
+    if (_voxelsVisible)
+    {
+        G4VisAttributes attrs(_materialDatabase->GetColourMap()[material]);
+        attrs.SetForceSolid(true);
+        currentVol->GetLogicalVolume()->SetVisAttributes(attrs);
+    }
+    else
+    {
+        currentVol->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+    return material;
 }
 
 void VoxelParameterisation::ComputeTransformation(const G4int copyNo,
@@ -47,7 +62,8 @@ G4Material* VoxelParameterisation::GetMaterial(G4int idx) const
 
 VoxelParameterisation::VoxelParameterisation(VMaterialDatabase* materialDatabase, DicomData* dicomData)
     : _materialDatabase(materialDatabase),
-      _dicomData(dicomData)
+      _dicomData(dicomData),
+      _colourMap(materialDatabase->GetColourMap())
 {
     // Prepare storage for materials
     _dims = dicomData->GetDimensions();
@@ -66,7 +82,16 @@ VoxelParameterisation::VoxelParameterisation(VMaterialDatabase* materialDatabase
             }
         }
     }
+    _voxelsVisible = Configuration::Get(VIS_SHOW_VOXELS, false);
 
     // Get list of materials to fulfill G4NestedParameterisation interface
     _materials = materialDatabase->GetAllMaterials();
+}
+
+void VoxelParameterisation::ConfigurationChanged(const string &key)
+{
+    if (key == VIS_SHOW_VOXELS)
+    {
+        _voxelsVisible = Configuration::Get<int>(key);
+    }
 }

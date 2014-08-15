@@ -18,6 +18,8 @@
 #define MATERIALS_HU_STEP "dicom.materials.hu_step"
 
 #define VIS_SHOW_VOXELS "dicom.vis.showVoxels"
+#define VIS_WINDOW_MIN "dicom.vis.windowMin"
+#define VIS_WINDOW_MAX "dicom.vis.windowMax"
 
 namespace g4dicom
 {
@@ -40,6 +42,8 @@ namespace g4dicom
         g4::Configuration::SetDefaultValue(MATERIALS_HU_STEP, 10);
 
         g4::Configuration::SetDefaultValue(VIS_SHOW_VOXELS, false);
+        g4::Configuration::SetDefaultValue(VIS_WINDOW_MIN, -500.0);
+        g4::Configuration::SetDefaultValue(VIS_WINDOW_MAX, 500.0);
     }
 }
 

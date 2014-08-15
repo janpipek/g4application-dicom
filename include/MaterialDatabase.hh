@@ -5,6 +5,7 @@
 #include <string>
 
 class G4Material;
+
 #include "Configuration.hh"
 
 #include "VMaterialDatabase.hh"
@@ -53,10 +54,14 @@ namespace g4dicom
 
         int GetHUStep() const { return _step; }
 
+        virtual std::map<G4Material*, G4Colour>& GetColourMap();
+
     private:
         void CreateMaterials();
 
         int _step = 10;
+
+        std::map<G4Material*, G4Colour> _colourMap;
 
         std::map<int, G4Material*> _materials;
 

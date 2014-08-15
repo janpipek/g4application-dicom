@@ -1,16 +1,22 @@
 #ifndef VOXELPARAMETERISATION_HH
 #define VOXELPARAMETERISATION_HH
 
-#include <G4VNestedParameterisation.hh>
 #include <vector>
 #include <boost/multi_array.hpp>
+
+#include <G4VNestedParameterisation.hh>
+#include <G4Colour.hh>
+
+#include <Configuration.hh>
 
 namespace g4dicom
 {
     class VMaterialDatabase;
     class DicomData;
 
-    class VoxelParameterisation : public G4VNestedParameterisation
+    class VoxelParameterisation :
+        public G4VNestedParameterisation,
+        public g4::ConfigurationObserver
     {
     // G4VNestedParameterisation interface
     public:
@@ -29,6 +35,8 @@ namespace g4dicom
     private:
         DicomData* _dicomData;
 
+        std::map<G4Material*, G4Colour> _colourMap;
+
         VMaterialDatabase* _materialDatabase;
 
         boost::multi_array<G4Material*, 3> _voxelMaterials;
@@ -38,6 +46,12 @@ namespace g4dicom
         std::vector<int> _dims;
 
         double _zHalfSize;
+
+        bool _voxelsVisible = false;
+
+        // ConfigurationObserver interface
+    protected:
+        virtual void ConfigurationChanged(const string &key);
     };
 }
 

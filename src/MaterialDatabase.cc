@@ -27,6 +27,7 @@ G4Material* MaterialDatabase::GetDefaultMaterial()
 
 void MaterialDatabase::CreateMaterials()
 {
+    _colourMap.clear();
     for (auto tempIt = _templates.begin(); tempIt != _templates.end(); tempIt++)
     {
         auto materials = tempIt->second->CreateMaterials(_step);
@@ -43,6 +44,10 @@ void MaterialDatabase::ConfigurationChanged(const std::string& key)
     {
         SetHUStep(Configuration::Get<int>(key));
     }
+    if (key == VIS_WINDOW_MIN || key == VIS_WINDOW_MAX)
+    {
+        _colourMap.clear();
+    }
 }
 
 void MaterialDatabase::SetHUStep(int step)
@@ -54,9 +59,33 @@ void MaterialDatabase::SetHUStep(int step)
     }
 }
 
+std::map<G4Material*, G4Colour>& MaterialDatabase::GetColourMap()
+{
+    if (_colourMap.empty())
+    {
+        double min = Configuration::Get<double>(VIS_WINDOW_MIN);
+        double max = Configuration::Get<double>(VIS_WINDOW_MAX);
+
+        for (auto it = _materials.begin(); it != _materials.end(); it++)
+        {
+            double hu = it->first;
+            G4Material* mat = it->second;
+
+            double brightness = (hu - min) / (max - min);
+            if (brightness < 0.) brightness = 0.;
+            if (brightness > 1.) brightness = 1.;
+
+            // G4cout << brightness << G4endl;
+
+            _colourMap[mat] = G4Colour(brightness, brightness, brightness);
+        }
+    }
+    return _colourMap;
+}
+
 G4Material* MaterialDatabase::GetMaterial(DicomData* data, int x, int y, int z)
 {
-    if (!_materials.size())
+    if (_materials.empty())
     {
         CreateMaterials();
     }

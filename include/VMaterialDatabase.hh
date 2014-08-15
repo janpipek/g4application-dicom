@@ -2,7 +2,9 @@
 #define VMATERIALDATABASE_HH
 
 #include <vector>
+
 #include <G4NistManager.hh>
+#include <G4Colour.hh>
 
 class G4Material;
 
@@ -40,6 +42,8 @@ namespace g4dicom
          * the nested parameterisation.
          */
         virtual std::vector<G4Material*> GetAllMaterials() = 0;
+
+        virtual std::map<G4Material*, G4Colour>& GetColourMap() = 0;
     };
 }
 
