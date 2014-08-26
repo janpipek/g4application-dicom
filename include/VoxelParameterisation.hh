@@ -14,6 +14,9 @@ namespace g4dicom
     class VMaterialDatabase;
     class DicomData;
 
+    /**
+     * @short Parameterization of voxel materials.
+     */
     class VoxelParameterisation :
         public G4VNestedParameterisation,
         public g4::ConfigurationObserver
@@ -49,7 +52,7 @@ namespace g4dicom
 
         bool _voxelsVisible = false;
 
-        // ConfigurationObserver interface
+    // ConfigurationObserver interface
     protected:
         virtual void ConfigurationChanged(const string &key);
     };

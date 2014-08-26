@@ -23,7 +23,7 @@ namespace g4dicom
     public:
         DicomPlugin();
 
-        ~DicomPlugin();
+        virtual ~DicomPlugin();
 
         virtual const std::string GetName() const { return "DICOM Plugin"; }
 

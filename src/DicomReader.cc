@@ -90,8 +90,6 @@ DicomData* DicomReader::GetData()
     return _data;
 }
 
-// #include <algorithm>
-
 DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
 {
     DicomSlice* slice = new DicomSlice();
@@ -140,10 +138,6 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
 
     const double* spacing = image->GetSpacing();
     slice->spacing.assign(spacing, spacing + 3);
-
-    // DEBUG
-    /* cout << "Max: " <<  *std::max_element(slice->data.data(), slice->data.data() + slice->GetSize()) << endl;
-    cout << "Min: " <<  *std::min_element(slice->data.data(), slice->data.data() + slice->GetSize()) << endl;*/
 
     return slice;
 }

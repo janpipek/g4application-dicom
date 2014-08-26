@@ -62,7 +62,7 @@ namespace g4dicom
 
     private:
         /**
-         * @brief Raw data
+         * @short Raw data
          *
          * Warning: Axes are ordered y, x, z!
          *     GetValue() reverses this to more intuitive interpretation.

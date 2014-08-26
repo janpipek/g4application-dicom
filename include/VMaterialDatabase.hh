@@ -22,12 +22,12 @@ namespace g4dicom
     {
     public:
         /**
-         * @brief Material for a voxel.
+         * @short Material for a voxel.
          */
         virtual G4Material* GetMaterial(DicomData* data, int x, int y, int z) = 0;
 
         /**
-         * @brief Material for empty voxels.
+         * @short Material for empty voxels.
          */
         virtual G4Material* GetDefaultMaterial()
         {
@@ -35,7 +35,7 @@ namespace g4dicom
         }
 
         /**
-         * @brief All materials created by the database.
+         * @short All materials created by the database.
          *
          * Every possible value returned for the voxels
          * has to be included. This vector is used by
@@ -43,6 +43,9 @@ namespace g4dicom
          */
         virtual std::vector<G4Material*> GetAllMaterials() = 0;
 
+        /**
+         * @short A map of colours for visualization of voxel materials.
+         */
         virtual std::map<G4Material*, G4Colour>& GetColourMap() = 0;
     };
 }

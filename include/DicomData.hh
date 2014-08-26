@@ -20,21 +20,21 @@ namespace g4dicom
         void Add(DicomSlice* slice);
 
         /**
-         * @brief Is the data set valid?
+         * @short Is the data set valid?
          *
          * Lazy evaluation.
          */
         bool IsValid();
 
         /**
-         * @brief [x, y, z] dimensions of all data.
+         * @short [x, y, z] dimensions of all data.
          */
         std::vector<int> GetDimensions();
 
         std::vector<int> GetOriginalDimensions();
 
         /**
-         * @brief Get the center of DICOM volume.
+         * @short Get the center of DICOM volume.
          *
          * Calculated from "origin" values stored in the DICOM files.
          * In Geant4 standard units.
@@ -42,7 +42,7 @@ namespace g4dicom
         std::vector<double> GetCenter();
 
         /**
-         * @brief Get HU value of a voxel.
+         * @short Get HU value of a voxel.
          *
          * Automatically sorts and validates data if necessary.
          * Indexes are in cropped coordinates (0 = start of the cropped volume)
@@ -94,13 +94,13 @@ namespace g4dicom
         bool _sorted;
 
         /**
-         * @brief Go through all slices and ensure that
+         * @short Go through all slices and ensure that
          *    we can build voxel geometry out of these.
          */
         void Validate();
 
         /**
-         * @brief Sort slice according to their z-axis.
+         * @short Sort slice according to their z-axis.
          */
         void SortSlices();
 

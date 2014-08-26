@@ -8,6 +8,11 @@ namespace g4dicom
 {
     class MaterialTemplate;
 
+    /**
+     * @short A class that loads material templates from a JSON file.
+     *
+     * @see MaterialTemplate
+     */
     class MaterialJsonReader
     {
     public:
