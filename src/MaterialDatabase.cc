@@ -36,6 +36,7 @@ void MaterialDatabase::CreateMaterials()
             _materials[matIt->first] = matIt->second;
         }
     }
+    G4cout << "MaterialDatabase: " <<  _materials.size() << " materials created in total." << G4endl;
 }
 
 void MaterialDatabase::ConfigurationChanged(const std::string& key)
