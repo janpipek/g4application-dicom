@@ -64,3 +64,8 @@ Inspiration
 -----------
 * https://github.com/christopherpoole/G4VoxelData by Christopher Poole
 * the official Geant4 DICOM extended example.
+
+Contact
+-------
+I'd be happy to accept feature requests, cooperation, questions, bug reports...
+Please write to jan.pipek AT gmail.com
