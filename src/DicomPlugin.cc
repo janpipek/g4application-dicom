@@ -6,6 +6,7 @@
 #include "DicomMessenger.hh"
 #include "DicomReader.hh"
 #include "MaterialJsonReader.hh"
+#include "DicomComponent.hh"
 
 using namespace g4;
 using namespace std;
@@ -14,67 +15,28 @@ using namespace g4dicom;
 MAKE_G4_PLUGIN( g4dicom::DicomPlugin )
 
 DicomPlugin::DicomPlugin()
-    : _cropLimits(0), _autoCrop(false)
 {
-    CreateUiDirectory("/dicom/");
-    _reader = new DicomReader();
-    _materialDatabase = new MaterialDatabase();
-    _messenger = new DicomMessenger(*this);
+    // CreateUiDirectory("/dicom/");
     SetConfigurationDefaults();
 }
 
 DicomPlugin::~DicomPlugin()
 {
-    delete _reader;
-    delete _messenger;
-    delete _materialDatabase;
-    if (_cropLimits)
-    {
-        delete _cropLimits;
-    }
 }
 
-void DicomPlugin::OnGeometryInitializing()
+const vector<string> DicomPlugin::GetAvailableComponents() const
 {
-    DicomData* data = _reader->GetData();
-    if (_autoCrop)
-    {
-        data->AutoCrop(_autoCropMinHU);
-    }
-    else if (_cropLimits)
-    {
-        data->Crop(*_cropLimits);
-    }
-
-    if (!data->IsValid())
-    {
-        G4Exception("DicomPlugin",
-            "InvalidDicomData", FatalException,
-            "Cannot interpret DICOM slices as a single voxel array."
-        );
-    }
-    DicomGeometryBuilder::Instance().SetDicomData(data);
-    DicomGeometryBuilder::Instance().SetMaterialDatabase(_materialDatabase);
+    return vector<string> { "default" };
 }
 
-void DicomPlugin::SetCropLimits(const vector<int>& cropLimits)
+Component *DicomPlugin::GetComponent(const string& name)
 {
-    _cropLimits = new vector<int>();
-    *_cropLimits = cropLimits;
-}
-
-void DicomPlugin::SetAutoCrop(double minHU)
-{
-    _autoCrop = true;
-    _autoCropMinHU = minHU;
-}
-
-void DicomPlugin::LoadMaterialDatabase(const std::string& path)
-{
-    MaterialJsonReader reader;
-    auto templates = reader.LoadTemplates(path);
-    for (auto it = templates.begin(); it != templates.end(); it++)
+    if (name == "default")
     {
-        _materialDatabase->AddMaterialTemplate(*it);
+        return new DicomComponent();
+    }
+    else
+    {
+        return nullptr;
     }
 }

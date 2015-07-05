@@ -1,8 +1,5 @@
-#include "DicomGeometryBuilder.hh"
+#include "DicomComponent.hh"
 
-#include <stdexcept>
-
-#include <G4LogicalVolume.hh>
 #include <G4Box.hh>
 #include <G4Material.hh>
 #include <G4NistManager.hh>
@@ -10,22 +7,33 @@
 #include <G4PVReplica.hh>
 #include <G4PVParameterised.hh>
 #include <G4VisAttributes.hh>
+#include <G4PVPlacement.hh>
 #include <globals.hh>
 
-#include "Configuration.hh"
-
-#include "VMaterialDatabase.hh"
-#include "DicomData.hh"
 #include "dicomConfiguration.hh"
+#include "DicomReader.hh"
+#include "DicomData.hh"
+#include "MaterialDatabase.hh"
+#include "MaterialJsonReader.hh"
+#include "DicomMessenger.hh"
 #include "VoxelParameterisation.hh"
 
+using namespace g4;
 using namespace g4dicom;
 using namespace std;
-using namespace g4;
 
 // See http://nipy.org/nibabel/dicom/dicom_orientation.html
 
-void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
+DicomComponent::DicomComponent()
+    : _data(nullptr), _materialDatabase(nullptr), _autoCrop(false)
+{
+    SetConfigurationDefaults();
+
+    _reader = new DicomReader();
+    _messenger = new DicomMessenger(*this);
+}
+
+void DicomComponent::ConfigurationChanged(const string &key)
 {
     if (key == VIS_SHOW_VOXELS)
     {
@@ -73,58 +81,40 @@ void DicomGeometryBuilder::ConfigurationChanged(const std::string& key)
     }
 }
 
-void DicomGeometryBuilder::SetVoxelsVisible(bool value)
-{
-    _voxelsVisible = value;
-    Configuration::Set(VIS_SHOW_VOXELS, value);
-}
-
-void DicomGeometryBuilder::SetPhantomCenter(const G4ThreeVector& position)
-{
-    bool positionChanged = (_phantomCenter != position);
-    if (positionChanged)
-    {
-        _phantomCenter = position;
-        Configuration::Set(PHANTOM_CENTER_X, position.getX() / mm);
-        Configuration::Set(PHANTOM_CENTER_Y, position.getY() / mm);
-        Configuration::Set(PHANTOM_CENTER_Z, position.getZ() / mm);
-
-        if (_physContainer)
-        {
-            _physContainer->SetTranslation(_phantomCenter);
-            GeometryChanged();
-        }
-    }
-}
-
-void DicomGeometryBuilder::SetPhantomRotation(const G4RotationMatrix& rotation)
-{
-    bool rotationChanged = (_rotationMatrix != rotation);
-    if (rotationChanged)
-    {
-        _rotationMatrix = rotation;
-        Configuration::Set(PHANTOM_ROTATION_PHI, rotation.getPhi() / deg, this);
-        Configuration::Set(PHANTOM_ROTATION_THETA, rotation.getTheta() / deg, this);
-        Configuration::Set(PHANTOM_ROTATION_PSI, rotation.getPsi() / deg, this);
-
-        if (_physContainer)
-        {
-            _physContainer->SetRotation(&_rotationMatrix);
-            GeometryChanged();
-        }
-    }
-}
-
-void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
+void DicomComponent::BuildGeometry(G4LogicalVolume* logVolume)
 {
     if (!_data)
     {
-        throw runtime_error("Cannot build geometry without DICOM data.");
+        LoadDicomData();
     }
+    if (!_data)
+    {
+        // TODO: throw
+    }
+    if (_autoCrop)
+    {
+        _data->AutoCrop(_autoCropMinHU);
+    }
+    else if (_cropLimits)
+    {
+        _data->Crop(*_cropLimits);
+    }
+
+    if (!_data->IsValid())
+    {
+        G4Exception("DicomPlugin",
+            "InvalidDicomData", FatalException,
+            "Cannot interpret DICOM slices as a single voxel array."
+        );
+    }
+
+
+    // TODO: Change to automatic reading? A bit cumbersome now
     if (!_materialDatabase)
     {
-        throw runtime_error("Cannot build geometry without material data.");   
+        // TODO: throw
     }
+
     vector<int> dims = _data->GetDimensions();
     G4cout << "Building DICOM voxel geometry of "
         << dims[0] << " x " << dims[1] << " x " << dims[2]
@@ -135,22 +125,27 @@ void DicomGeometryBuilder::BuildGeometry(G4LogicalVolume* logWorld)
         << " x " << totalSize[1] << " x " << totalSize[2] << " mm."
         << G4endl;
 
-    G4LogicalVolume* logContainer = BuildLogicalVolume();
-    _physContainer = 
-        new G4PVPlacement(&_rotationMatrix, // Rotation
-            _phantomCenter,                 // Position
-            logContainer,                   // The logic volume
-            "phantomContainer",             // Name
-            logWorld,                       // Mother
-            false,                          // No op. bool.
-            1);                             // Copy number
+    G4LogicalVolume* logContainer = BuildLogicalVolume(_data);
+
+    new G4PVPlacement(&_rotationMatrix, // Rotation
+        _phantomCenter,                 // Position
+        logContainer,                   // The logic volume
+        "phantomContainer",             // Name
+        logVolume,                      // Mother
+        false,                          // No op. bool.
+        1);                             // Copy number
 }
 
-G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
+void DicomComponent::LoadDicomData()
 {
-    vector<double> voxelSize = _data->GetVoxelSize();
-    vector<double> totalSize = _data->GetTotalSize();
-    vector<int> dims = _data->GetDimensions();
+    _data = _reader->GetData();
+}
+
+G4LogicalVolume* DicomComponent::BuildLogicalVolume(DicomData* data)
+{
+    vector<double> voxelSize = data->GetVoxelSize();
+    vector<double> totalSize = data->GetTotalSize();
+    vector<int> dims = data->GetDimensions();
 
     // Fill everything with air
     G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
@@ -183,7 +178,7 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
         new G4LogicalVolume(solZVoxel, air, zReplicaName);
 
     logXReplica->SetVisAttributes(G4VisAttributes::Invisible);
-    logYReplica->SetVisAttributes(G4VisAttributes::Invisible); 
+    logYReplica->SetVisAttributes(G4VisAttributes::Invisible);
     if (!_voxelsVisible)
     {
         logZVoxel->SetVisAttributes(G4VisAttributes::Invisible);
@@ -194,7 +189,7 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
     new G4PVReplica(yReplicaName, logYReplica, logXReplica, kYAxis, dims[1], voxelSize[1]);
 
     // Place physical volume with parameterisation for z
-    VoxelParameterisation* voxelParam = new VoxelParameterisation(_materialDatabase, _data);
+    VoxelParameterisation* voxelParam = new VoxelParameterisation(_materialDatabase, data);
     new G4PVParameterised(zReplicaName,
                           logZVoxel,
                           logYReplica,
@@ -206,19 +201,77 @@ G4LogicalVolume *DicomGeometryBuilder::BuildLogicalVolume()
     return logContainer;
 }
 
-DicomGeometryBuilder::DicomGeometryBuilder()
-    : _data(0), _materialDatabase(0), _physContainer(0)
+void DicomComponent::SetMaterialDatabase(VMaterialDatabase *database)
 {
-    _phantomCenter.setX(Configuration::Get(PHANTOM_CENTER_X, 0.) * mm);
-    _phantomCenter.setY(Configuration::Get(PHANTOM_CENTER_Y, 0.) * mm);
-    _phantomCenter.setZ(Configuration::Get(PHANTOM_CENTER_Z, 0.) * mm);
-
-    _rotationMatrix.setTheta(Configuration::Get(PHANTOM_ROTATION_THETA, 0.) * deg);
-    _rotationMatrix.setPsi(Configuration::Get(PHANTOM_ROTATION_PSI, 0.) * deg);
-    _rotationMatrix.setPhi(Configuration::Get(PHANTOM_ROTATION_PHI, 0.) * deg);
+    if (_materialDatabase)
+    {
+        delete _materialDatabase;
+    }
+    _materialDatabase = database;
 }
 
-DicomGeometryBuilder::~DicomGeometryBuilder()
+void DicomComponent::LoadMaterialDatabase(const string& path)
 {
-    // _data is deleted by the originating DicomReader.
+    MaterialDatabase* db  = new MaterialDatabase();
+    MaterialJsonReader reader;
+    auto templates = reader.LoadTemplates(path);
+    for (auto it = templates.begin(); it != templates.end(); it++)
+    {
+        db->AddMaterialTemplate(*it);
+    }
+    SetMaterialDatabase(db);
+}
+
+void DicomComponent::SetCropLimits(const vector<int>& cropLimits)
+{
+    _cropLimits = new vector<int>();
+    *_cropLimits = cropLimits;
+}
+
+void DicomComponent::SetAutoCrop(double minHU)
+{
+    _autoCrop = true;
+    _autoCropMinHU = minHU;
+}
+
+void DicomComponent::SetVoxelsVisible(bool value)
+{
+    _voxelsVisible = value;
+    Configuration::Set(VIS_SHOW_VOXELS, value);
+}
+
+void DicomComponent::SetPhantomCenter(const G4ThreeVector& position)
+{
+    bool positionChanged = (_phantomCenter != position);
+    if (positionChanged)
+    {
+        _phantomCenter = position;
+        Configuration::Set(PHANTOM_CENTER_X, position.getX() / mm);
+        Configuration::Set(PHANTOM_CENTER_Y, position.getY() / mm);
+        Configuration::Set(PHANTOM_CENTER_Z, position.getZ() / mm);
+
+        if (_physContainer)
+        {
+            _physContainer->SetTranslation(_phantomCenter);
+            GeometryChanged();
+        }
+    }
+}
+
+void DicomComponent::SetPhantomRotation(const G4RotationMatrix& rotation)
+{
+    bool rotationChanged = (_rotationMatrix != rotation);
+    if (rotationChanged)
+    {
+        _rotationMatrix = rotation;
+        Configuration::Set(PHANTOM_ROTATION_PHI, rotation.getPhi() / deg, this);
+        Configuration::Set(PHANTOM_ROTATION_THETA, rotation.getTheta() / deg, this);
+        Configuration::Set(PHANTOM_ROTATION_PSI, rotation.getPsi() / deg, this);
+
+        if (_physContainer)
+        {
+            _physContainer->SetRotation(&_rotationMatrix);
+            GeometryChanged();
+        }
+    }
 }
