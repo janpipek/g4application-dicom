@@ -126,7 +126,7 @@ DicomSlice *DicomReader::GetSlice(gdcm::Image *image)
     rescaler.SetTargetPixelType(int16format);
     rescaler.SetMinMaxForPixelType(int16format.GetMin(), int16format.GetMax());
 
-    // Rescale
+    // Rescale (writes directly to data buffer of the slice)
     rescaler.Rescale(outBuffer, inBuffer, bufferLength);
 
     // Set other values

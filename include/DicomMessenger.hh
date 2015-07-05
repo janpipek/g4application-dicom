@@ -15,12 +15,12 @@ namespace g4
 
 namespace g4dicom
 {
-    class DicomPlugin;
+    class DicomComponent;
 
     class DicomMessenger : public G4UImessenger
     {
     public:
-        DicomMessenger(DicomPlugin& plugin);
+        DicomMessenger(DicomComponent& component);
 
         virtual ~DicomMessenger();
 
@@ -28,7 +28,7 @@ namespace g4dicom
     public:
         virtual G4String GetCurrentValue(G4UIcommand *command);
 
-        virtual void SetNewValue(G4UIcommand *command, G4String newValue);
+        virtual void SetNewValue(G4UIcommand *command, G4String newValue);       
 
     private:
         G4UIcmdWithAString* _loadMaterialsCommand;
@@ -49,7 +49,7 @@ namespace g4dicom
 
         G4UIcmdWithoutParameter* _resetRotationCommand;
 
-        DicomPlugin& _plugin;
+        DicomComponent& _component;
     };
 }
 

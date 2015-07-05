@@ -8,16 +8,15 @@
 
 #include "ui/UIcmdWithNIntegers.hh"
 
-#include "DicomPlugin.hh"
+#include "DicomComponent.hh"
 #include "DicomReader.hh"
-#include "DicomGeometryBuilder.hh"
 
 using namespace g4dicom;
 using namespace g4;
 using namespace std;
 
-DicomMessenger::DicomMessenger(DicomPlugin &plugin)
-    : _plugin(plugin)
+DicomMessenger::DicomMessenger(DicomComponent &component)
+    : _component(component)
 {
     // TODO: Add hints
 
@@ -62,53 +61,53 @@ G4String DicomMessenger::GetCurrentValue(G4UIcommand *command)
 
 typedef G4RotationMatrix& (G4RotationMatrix::*rotationMethod)(G4double angle);
 
-void DoRotation(G4String newValue, rotationMethod method)
+void DoRotation(DicomComponent& component, G4String newValue, rotationMethod method)
 {
     double angle = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(newValue);
-    G4RotationMatrix originalRotation = DicomGeometryBuilder::Instance().GetPhantomRotation();
+    G4RotationMatrix originalRotation = component.GetPhantomRotation();
     G4RotationMatrix newRotation = (originalRotation.*method)(-angle);
-    DicomGeometryBuilder::Instance().SetPhantomRotation(newRotation);
+    component.SetPhantomRotation(newRotation);
 }
 
 void DicomMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
 {
     if (command == _addFilesCommand)
     {
-        _plugin.GetDicomReader()->AddFiles(newValue);
+        _component.GetDicomReader()->AddFiles(newValue);
     }
     else if (command == _readFilesCommand)
     {
-        _plugin.GetDicomReader()->ReadFiles();
+        _component.GetDicomReader()->ReadFiles();
     }
     else if (command == _cropCommand)
     {
         vector<int> cropLimits = _cropCommand->GetNewIntVectorValue(newValue);
-        _plugin.SetCropLimits(cropLimits);
+        _component.SetCropLimits(cropLimits);
     }
     else if (command == _autoCropCommand)
     {
         double minHU = _autoCropCommand->GetNewDoubleValue(newValue);
-        _plugin.SetAutoCrop(minHU);
+        _component.SetAutoCrop(minHU);
     }
     else if (command == _loadMaterialsCommand)
     {
-        _plugin.LoadMaterialDatabase(newValue);
+        _component.LoadMaterialDatabase(newValue);
     }
 
     else if (command == _rotateXCommand)
     {
-        DoRotation(newValue, &G4RotationMatrix::rotateX);
+        DoRotation(_component, newValue, &G4RotationMatrix::rotateX);
     }
     else if (command == _rotateYCommand)
     {
-        DoRotation(newValue, &G4RotationMatrix::rotateY);
+        DoRotation(_component, newValue, &G4RotationMatrix::rotateY);
     }
     else if (command == _rotateZCommand)
     {
-        DoRotation(newValue, &G4RotationMatrix::rotateZ);
+        DoRotation(_component, newValue, &G4RotationMatrix::rotateZ);
     }
     else if (command == _resetRotationCommand)
     {
-        DicomGeometryBuilder::Instance().SetPhantomRotation(G4RotationMatrix());
+        _component.SetPhantomRotation(G4RotationMatrix());
     }
 }

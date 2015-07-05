@@ -8,6 +8,7 @@
 #include <G4PVParameterised.hh>
 #include <G4VisAttributes.hh>
 #include <G4PVPlacement.hh>
+#include <G4RunManager.hh>
 #include <globals.hh>
 
 #include "dicomConfiguration.hh"
@@ -253,7 +254,7 @@ void DicomComponent::SetPhantomCenter(const G4ThreeVector& position)
         if (_physContainer)
         {
             _physContainer->SetTranslation(_phantomCenter);
-            GeometryChanged();
+            G4RunManager::GetRunManager()->GeometryHasBeenModified();
         }
     }
 }
@@ -271,7 +272,7 @@ void DicomComponent::SetPhantomRotation(const G4RotationMatrix& rotation)
         if (_physContainer)
         {
             _physContainer->SetRotation(&_rotationMatrix);
-            GeometryChanged();
+            G4RunManager::GetRunManager()->GeometryHasBeenModified();
         }
     }
 }
