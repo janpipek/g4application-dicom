@@ -8,6 +8,7 @@
 using namespace boost;
 using namespace g4dicom;
 using namespace std;
+using namespace CLHEP;
 
 /**
   * @short Linear interpolation of values

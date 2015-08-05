@@ -22,6 +22,7 @@
 using namespace g4;
 using namespace g4dicom;
 using namespace std;
+using namespace CLHEP;
 
 // See http://nipy.org/nibabel/dicom/dicom_orientation.html
 

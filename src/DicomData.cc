@@ -4,10 +4,12 @@
 #include <cmath>
 #include <stdexcept>
 
+#include <G4SystemOfUnits.hh>
 #include <globals.hh>
 
 using namespace g4dicom;
 using namespace std;
+using namespace CLHEP;
 
 DicomData::DicomData()
     : _validity(0), _sorted(true), _slices(0), _dimensions(0)
