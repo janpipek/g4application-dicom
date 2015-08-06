@@ -5,7 +5,8 @@ based on GDCM.
 
 MIT License (see LICENSE file).
 
-The plugin is in an EARLY stage of development.
+*The plugin is in an EARLY stage of development. Currently working only with **geant9** branch of g4application due
+to massive API changes.*
 
 Requirements:
 -------------
