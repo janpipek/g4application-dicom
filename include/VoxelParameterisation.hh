@@ -2,6 +2,7 @@
 #define VOXELPARAMETERISATION_HH
 
 #include <vector>
+#include <string>
 #include <boost/multi_array.hpp>
 
 #include <G4VNestedParameterisation.hh>
@@ -54,7 +55,7 @@ namespace g4dicom
 
     // ConfigurationObserver interface
     protected:
-        virtual void ConfigurationChanged(const string &key);
+        virtual void ConfigurationChanged(const std::string &key);
     };
 }
 

@@ -1,24 +1,32 @@
 # Basic DICOM example macro
 # -------------------------
-# Based on the simple plugin from g4application distribution that provides stuff
+/app/addComponent DefaultWorld
+/app/addComponent ReferencePhysicsList
+/conf/setString component.ReferencePhysicsList.listName FTFP_BERT
+
+/plugin/open libsimplePlugin.so
+/plugin/loadAll simplePlugin
 
 # Load the plugin
-/app/plugin/load libsimplePlugin.so
-/app/plugin/load libdicomPlugin.so
+/plugin/open dicomPlugin
+/plugin/loadAll dicomPlugin
 
 # DICOM images
-/dicom/addFiles /usr/local/share/Geant4-9.6.1/examples/extended/medical/DICOM/1.dcm
-/dicom/readFiles
-/dicom/crop 120 136 120 136 0 0
+/dicom/addFiles /doc/studium/dicom/CT/*.dcm
+/dicom/readFiles # Not necessary
+# /dicom/crop 120 136 120 136 0 0
 /dicom/loadMaterials /home/honza/model/g4application-dicom/examples/materials-water.json
 
-/app/setDouble dicom.phantom_center_z 100.0
-/app/setInt dicom.materials.hu_step 100
+/conf/setDouble dicom.phantom_center_z 100.0
+/conf/setInt dicom.materials.hu_step 100
 
 # Run
 /run/initialize
 
-# Show configuration
-/app/printConfiguration
+/app/addAction MemoryRunAction
 
-# /run/beamOn 100
+# Show configuration
+/conf/print
+
+/run/beamOn 10
+# /app/interactive

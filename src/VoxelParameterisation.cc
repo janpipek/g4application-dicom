@@ -25,6 +25,7 @@ G4Material* VoxelParameterisation::ComputeMaterial(G4VPhysicalVolume* currentVol
     int z = repNo;
     if (z < 0) // Deal with occasional negative replica number (where from?)
     {
+        // TODO: If some verbosity is met
         G4cerr << "VoxelParameterisation: z=" << z << " requested. Continuing..." << G4endl;
         z = 0;
     }

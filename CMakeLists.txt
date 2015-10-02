@@ -17,7 +17,7 @@ if(DEFINED G4APP_PATH)
 endif()
 
 # Use the FindG4Application.cmake file
-set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH} cmake)
+set(CMAKE_MODULE_PATH "${G4APP_SOURCE_PATH}/cmake/" ${CMAKE_MODULE_PATH})
 
 # Find the application library & Geant4
 find_package(G4Application REQUIRED)
