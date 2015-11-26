@@ -50,6 +50,7 @@ Configuration values
 * dicom.phantom_rotation_theta - Euler angle theta (in deg)
 * dicom.phantom_rotation_phi - Euler angle phi (in deg)
 * dicom.phantom_rotation_psi - Euler angle psi (in deg)
+* dicom.parallel - (bool) Whether to build voxel volume in a parallel world
 
 Important Classes
 -----------------

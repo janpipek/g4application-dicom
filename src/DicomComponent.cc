@@ -18,6 +18,7 @@
 #include "MaterialJsonReader.hh"
 #include "DicomMessenger.hh"
 #include "VoxelParameterisation.hh"
+#include "GenericParallelWorld.hh"
 
 using namespace g4;
 using namespace g4dicom;
@@ -83,7 +84,29 @@ void DicomComponent::ConfigurationChanged(const string &key)
     }
 }
 
-void DicomComponent::BuildGeometry(G4LogicalVolume* logVolume)
+void DicomComponent::BuildGeometry(G4LogicalVolume *logVolume)
+{
+    if (!CreateAsParallelWorld())
+    {
+        BuildPhysicalVolume(logVolume);
+    }
+}
+
+std::vector<G4VUserParallelWorld *> DicomComponent::CreateParallelWorlds()
+{
+    if (CreateAsParallelWorld())
+    {
+        auto lambda = [this](G4LogicalVolume* volume) -> void { BuildPhysicalVolume(volume); };
+        auto world = new GenericParallelWorld("voxel-phantom", lambda);
+        return { world };
+    }
+    else
+    {
+        return {};
+    }
+}
+
+G4VPhysicalVolume* DicomComponent::BuildPhysicalVolume(G4LogicalVolume* logVolume)
 {
     if (!_data)
     {
@@ -129,13 +152,18 @@ void DicomComponent::BuildGeometry(G4LogicalVolume* logVolume)
 
     G4LogicalVolume* logContainer = BuildLogicalVolume(_data);
 
-    new G4PVPlacement(&_rotationMatrix, // Rotation
+    return new G4PVPlacement(&_rotationMatrix, // Rotation
         _phantomCenter,                 // Position
         logContainer,                   // The logic volume
         "phantomContainer",             // Name
         logVolume,                      // Mother
         false,                          // No op. bool.
         1);                             // Copy number
+}
+
+bool DicomComponent::CreateAsParallelWorld() const
+{
+    return Configuration::Get<bool>(AS_PARALLEL_WORLD);
 }
 
 void DicomComponent::LoadDicomData()

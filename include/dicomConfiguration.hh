@@ -21,6 +21,8 @@
 #define VIS_WINDOW_MIN "dicom.vis.windowMin"
 #define VIS_WINDOW_MAX "dicom.vis.windowMax"
 
+#define AS_PARALLEL_WORLD "dicom.parallel"
+
 namespace g4dicom
 {
     /**
@@ -44,6 +46,8 @@ namespace g4dicom
         g4::Configuration::SetDefaultValue(VIS_SHOW_VOXELS, false);
         g4::Configuration::SetDefaultValue(VIS_WINDOW_MIN, -500.0);
         g4::Configuration::SetDefaultValue(VIS_WINDOW_MAX, 500.0);
+
+        g4::Configuration::SetDefaultValue(AS_PARALLEL_WORLD, true);
     }
 }
 

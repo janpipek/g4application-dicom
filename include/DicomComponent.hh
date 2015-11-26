@@ -28,9 +28,13 @@ namespace g4dicom
     public:
         DicomComponent();
 
-        virtual void ConfigurationChanged(const std::string& key);
+        void ConfigurationChanged(const std::string& key) override;
 
-        virtual void BuildGeometry(G4LogicalVolume *logVolume);
+        void BuildGeometry(G4LogicalVolume *logVolume) override;
+
+        std::vector<G4VUserParallelWorld *> CreateParallelWorlds() override;
+
+        bool CreateAsParallelWorld() const;
 
         virtual DicomReader* GetDicomReader() const { return _reader; }
 
@@ -85,8 +89,10 @@ namespace g4dicom
 
         bool VoxelsVisible() const { return _voxelsVisible; }
 
-    protected:
+    protected:      
         G4LogicalVolume* BuildLogicalVolume(DicomData* data);
+
+        G4VPhysicalVolume* BuildPhysicalVolume(G4LogicalVolume *logVolume);
 
     private:
         std::vector<int>* _cropLimits;
