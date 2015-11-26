@@ -1,17 +1,22 @@
 # Basic DICOM example macro
 # -------------------------
-/app/addComponent DefaultWorld
-/app/addComponent ReferencePhysicsList
+/component/builtin DefaultWorld
+/component/builtin ReferencePhysicsList
+/component/builtin MemoryLogging
+
+/component/verbose 1
+
 /conf/setString component.ReferencePhysicsList.listName FTFP_BERT
 
-/plugin/open libsimplePlugin.so
-/plugin/loadAll simplePlugin
+# /plugin/open libsimplePlugin.so
+# /plugin/loadAll simplePlugin
 
 # Load the plugin
 /plugin/open dicomPlugin
 /plugin/loadAll dicomPlugin
 
 # DICOM images
+/dicom/verbose 1
 /dicom/addFiles /doc/studium/dicom/CT/*.dcm
 /dicom/readFiles # Not necessary
 # /dicom/crop 120 136 120 136 0 0
@@ -23,10 +28,7 @@
 # Run
 /run/initialize
 
-/app/addAction MemoryRunAction
-
 # Show configuration
 /conf/print
 
 /run/beamOn 10
-# /app/interactive

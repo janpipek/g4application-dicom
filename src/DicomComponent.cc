@@ -21,6 +21,7 @@
 #include "GenericParallelWorld.hh"
 
 using namespace g4;
+using namespace g4::util;
 using namespace g4dicom;
 using namespace std;
 using namespace CLHEP;
@@ -28,7 +29,7 @@ using namespace CLHEP;
 // See http://nipy.org/nibabel/dicom/dicom_orientation.html
 
 DicomComponent::DicomComponent()
-    : _data(nullptr), _materialDatabase(nullptr), _autoCrop(false)
+    : VerbosityMixin(true, "/dicom/"), _data(nullptr), _materialDatabase(nullptr), _autoCrop(false)
 {
     SetConfigurationDefaults();
 
@@ -88,7 +89,18 @@ void DicomComponent::BuildGeometry(G4LogicalVolume *logVolume)
 {
     if (!CreateAsParallelWorld())
     {
+        if (GetVerboseLevel() > 0)
+        {
+            G4cout << "DicomComponent: Voxel phantom will build in the real world." << G4endl;
+        }
         BuildPhysicalVolume(logVolume);
+    }
+    else
+    {
+        if (GetVerboseLevel() > 0)
+        {
+            G4cout << "DicomComponent: Voxel phantom will be built as parallel world." << G4endl;
+        }
     }
 }
 

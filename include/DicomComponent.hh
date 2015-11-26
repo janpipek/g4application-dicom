@@ -4,6 +4,8 @@
 #include "Component.hh"
 #include "Configuration.hh"
 
+#include "util/Verbosity.hh"
+
 class G4PVPlacement;
 
 namespace g4dicom
@@ -23,7 +25,7 @@ namespace g4dicom
       * Materials are described using VoxelParameterisation
       * that is built from material database and DICOM data.
      */
-    class DicomComponent : public g4::Component, private g4::ConfigurationObserver
+    class DicomComponent : public g4::Component, private g4::ConfigurationObserver, public g4::util::VerbosityMixin
     {
     public:
         DicomComponent();
