@@ -1,3 +1,5 @@
+__Note: This library was developed for a historic version of Geant4. It is not developed anymore. If anyone wants to continue the work, I will be most happy to pass it over.__
+
 g4application-dicom
 ===================
 DICOM plugin for g4application (see https://github.com/janpipek/g4application),
